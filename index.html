@@ -143,7 +143,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, accounts, contract, feedContract;
-        const contractAddress = "0x5F3d2D7982D1532d937a629FFd1AF8c9664f9581"; // Updated contract address
+        const contractAddress = "0x5F3d2D7982D1532d937a629FFd1AF8c9664f9581";
         const FEED_ADDRESS = "0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0";
         const contractABI = [
             {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
@@ -237,7 +237,7 @@
                 document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
                 const maxMintableFee = feedBalance > 0 ? (feedBalance * feedPrice * 100) / (150 * 10**16) : 0;
                 document.getElementById('maxMintableFee').innerText = `${web3.utils.fromWei(maxMintableFee.toString(), 'ether')} FEE`;
-                const redeemableFeed = debt > 0 ? (parseFloat(web3.utils.fromWei(debt, 'ether')) * parseFloat(web3.utils.fromWei(feedPrice, 'ether')) * 10**18) / 10**18 : 0; // Adjusted for precision
+                const redeemableFeed = debt > 0 ? (parseFloat(web3.utils.fromWei(debt, 'ether')) * parseFloat(web3.utils.fromWei(feedPrice, 'ether')) * 10**18) / 10**18 : 0;
                 document.getElementById('redeemableFeed').innerText = `${web3.utils.fromWei(redeemableFeed.toString(), 'ether')} FEED`;
             } catch (error) { console.error('Error updating balances:', error); }
         }
@@ -325,13 +325,37 @@
         async function setMintPercentage(percentage) {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             try {
+                // Get FEED balance in wei
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+                if (BigInt(feedBalance) <= 0) { showModal('Insufficient FEED balance to mint!'); return; }
+
+                // Convert to ether (18 decimals) as a string to avoid floating point issues
+                const feedBalanceEther = web3.utils.fromWei(feedBalance, 'ether');
+                const feedBalanceBigInt = BigInt(feedBalance);
+
+                // Calculate feedAmount as a percentage of the balance (in wei)
+                const percentageBigInt = BigInt(percentage);
+                const hundredBigInt = BigInt(100);
+                const feedAmountWei = (feedBalanceBigInt * percentageBigInt) / hundredBigInt;
+                const feedAmountEther = web3.utils.fromWei(feedAmountWei.toString(), 'ether');
+
+                // Get feed price
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
                 const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
-                const feedBalanceEther = parseFloat(web3.utils.fromWei(feedBalance, 'ether'));
-                const feedAmount = Math.floor(feedBalanceEther * (percentage / 100));
-                const maxMintableFee = feedAmount > 0 ? (web3.utils.toWei(feedAmount.toString(), 'ether') * 100 * 10**18) / (feedPrice * 150 * 10**16) : 0;
-                document.getElementById('mintFeedInput').value = feedAmount;
+
+                // Calculate maxMintableFee
+                const feedPriceBN = new web3.utils.BN(feedPrice);
+                const feedAmountWeiBN = new web3.utils.BN(feedAmountWei);
+                const hundredBN = new web3.utils.BN(100);
+                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
+                const minCollateralRatioBN = new web3.utils.BN('150000000000000000000'); // 150 * 10^16
+
+                const numerator = feedAmountWeiBN.mul(hundredBN).mul(ten18BN);
+                const denominator = feedPriceBN.mul(minCollateralRatioBN);
+                const maxMintableFee = numerator.div(denominator);
+
+                // Update UI
+                document.getElementById('mintFeedInput').value = parseInt(feedAmountEther);
                 document.getElementById('maxMintableFee').innerText = `${web3.utils.fromWei(maxMintableFee.toString(), 'ether')} FEE`;
             } catch (error) { showModal(`Error setting mint percentage: ${error.message}`); }
         }
