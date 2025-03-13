@@ -206,7 +206,7 @@
                 let maxMintableFee = new web3.utils.BN(0);
                 if (feedAmountWei.gt(new web3.utils.BN(0))) {
                     const numerator = feedAmountWei.mul(hundredBN).mul(ten18BN);
-                    const denominator = feedPrice.mul(minCollateralRatioBN);
+                    const denominator = feedPrice.mul(minCollateralRatioBN).div(new web3.utils.BN(10**12));
                     maxMintableFee = numerator.div(denominator);
                 }
                 document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(4)} FEE`;
@@ -307,7 +307,7 @@
                 const ten18BN = new web3.utils.BN('1000000000000000000');
                 const minCollateralRatioBN = new web3.utils.BN('150000000000000000000');
                 const numerator = feedAmountWeiBN.mul(hundredBN).mul(ten18BN);
-                const denominator = feedPrice.mul(minCollateralRatioBN);
+                const denominator = feedPrice.mul(minCollateralRatioBN).div(new web3.utils.BN(10**12));
                 const maxMintableFee = numerator.div(denominator);
                 document.getElementById('mintFeedInput').value = parseInt(feedAmountEther);
                 document.getElementById('maxMintableFee').innerText = `${parseFloat(web3.utils.fromWei(maxMintableFee.toString(), 'ether')).toFixed(9)} FEE`;
@@ -351,8 +351,9 @@
                 const minCollateralRatioBN = new web3.utils.BN('150000000000000000000');
                 const feedWeiBN = new web3.utils.BN(feedWei);
                 const numerator = feedWeiBN.mul(hundredBN).mul(ten18BN);
-                const denominator = feedPrice.mul(minCollateralRatioBN);
+                const denominator = feedPrice.mul(minCollateralRatioBN).div(new web3.utils.BN(10**12));
                 const feeAmount = numerator.div(denominator);
+                console.log(`Calculated feeAmount: ${web3.utils.fromWei(feeAmount.toString(), 'ether')} FEE`);
                 const allowance = await feedContract.methods.allowance(accounts[0], contractAddress).call();
                 if (new web3.utils.BN(allowance).lt(feedWeiBN)) {
                     showModal(`Approving ${feedAmount} FEED for minting... 🛠️`);
