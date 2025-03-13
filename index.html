@@ -398,16 +398,13 @@
             } catch (error) { console.error('Error setting collateral percentage:', error); }
         }
 
-        async function checkAndApproveFeed(amountWei) {
-            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return false; }
+        async function checkAndApproveFeed() {
+            if (!web3 || !contract || !accounts || !feedContract) { showModal('Please connect your wallet first! 🔧'); return false; }
             try {
-                const allowance = await feedContract.methods.allowance(accounts[0], contractAddress).call();
-                if (new web3.utils.BN(allowance).lt(amountWei)) {
-                    const maxAmount = web3.utils.toBN('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-                    showModal('Authorizing FEED... ⏳');
-                    await feedContract.methods.approve(contractAddress, maxAmount).send({ from: accounts[0], gas: 100000 });
-                    showModal('Authorization successful! Please confirm the transaction. ✅');
-                }
+                const maxAmount = web3.utils.toBN('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+                showModal('Authorizing FEED... ⏳');
+                await feedContract.methods.approve(contractAddress, maxAmount).send({ from: accounts[0], gas: 100000 });
+                showModal('Authorization successful! Please confirm the transaction. ✅');
                 return true;
             } catch (error) {
                 showModal(`Authorization failed: ${error.message}`);
@@ -424,7 +421,7 @@
                 const mintButton = document.getElementById('mintButton');
                 mintButton.classList.add('loading');
                 const feedWei = web3.utils.toWei(feedAmount, 'ether');
-                const isApproved = await checkAndApproveFeed(feedWei);
+                const isApproved = await checkAndApproveFeed();
                 if (!isApproved) throw new Error('Authorization failed');
                 showModal(`Minting with ${feedAmount} FEED... ⛏️`);
                 await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
@@ -444,7 +441,7 @@
                 const addCollateralButton = document.getElementById('addCollateralButton');
                 addCollateralButton.classList.add('loading');
                 const feedWei = web3.utils.toWei(feedAmount, 'ether');
-                const isApproved = await checkAndApproveFeed(feedWei);
+                const isApproved = await checkAndApproveFeed();
                 if (!isApproved) throw new Error('Authorization failed');
                 showModal(`Adding ${feedAmount} FEED as collateral... ⛓️`);
                 await contract.methods.addCollateral(feedWei).send({ from: accounts[0], gas: 200000 });
