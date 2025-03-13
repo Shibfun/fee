@@ -359,8 +359,8 @@
                 mintButton.classList.add('loading');
                 const feedWei = web3.utils.toWei(feedAmount, 'ether');
                 showModal(`Minting with ${feedAmount} FEED... ⛏️`);
-                await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
-                showModal('Transaction successful! 💎');
+                const tx = await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
+                showModal(`Mint successful! Tx: ${tx.transactionHash} 💎`);
                 document.getElementById('mintFeedInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Mint failed: ${error.message}`); }
@@ -377,8 +377,8 @@
                 burnButton.classList.add('loading');
                 const feeWei = web3.utils.toWei(feeAmount, 'ether');
                 showModal(`Burning ${feeAmount} FEE... 🔥`);
-                await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
-                showModal('Transaction successful! 🚀');
+                const tx = await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
+                showModal(`Burn successful! Tx: ${tx.transactionHash} 🚀`);
                 document.getElementById('burnFeeInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Burn failed: ${error.message}`); }
@@ -394,8 +394,8 @@
                 const liquidateButton = document.getElementById('liquidateButton');
                 liquidateButton.classList.add('loading');
                 showModal(`Liquidating ${userAddress}... ⚡`);
-                await contract.methods.liquidate(userAddress).send({ from: accounts[0], gas: 300000 });
-                showModal('Transaction successful! 💰');
+                const tx = await contract.methods.liquidate(userAddress).send({ from: accounts[0], gas: 300000 });
+                showModal(`Liquidation successful! Tx: ${tx.transactionHash} 💰`);
                 updateBalances(); updateFeedPrice(); updateTargetCollateralRatio(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Liquidation failed: ${error.message}`); }
             finally { isOperationInProgress = false; liquidateButton.classList.remove('loading'); }
