@@ -229,15 +229,30 @@
                 const collateral = await contract.methods.collateral(accounts[0]).call();
                 const collateralRatio = await contract.methods.getCollateralRatio(accounts[0]).call();
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
+
+                // Calculate maxMintableFee using BN
+                const feedBalanceBN = new web3.utils.BN(feedBalance);
+                const hundredBN = new web3.utils.BN(100);
+                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
+                const minCollateralRatioBN = new web3.utils.BN('150000000000000000000'); // 150 * 10^16
+
+                let maxMintableFee = new web3.utils.BN(0);
+                if (feedBalanceBN.gt(new web3.utils.BN(0))) {
+                    const numerator = feedBalanceBN.mul(hundredBN).mul(ten18BN);
+                    const denominator = feedPrice.mul(minCollateralRatioBN);
+                    maxMintableFee = numerator.div(denominator);
+                }
+
+                // Update UI
                 document.getElementById('feeBalance').innerText = `${web3.utils.fromWei(feeBalance, 'ether')} FEE`;
                 document.getElementById('feedBalance').innerText = web3.utils.fromWei(feedBalance, 'ether');
                 document.getElementById('userDebt').innerText = `${web3.utils.fromWei(debt, 'ether')} FEE`;
                 document.getElementById('userCollateral').innerText = web3.utils.fromWei(collateral, 'ether');
                 document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
-                const maxMintableFee = feedBalance > 0 ? (feedBalance * feedPrice * 100) / (150 * 10**16) : 0;
                 document.getElementById('maxMintableFee').innerText = `${web3.utils.fromWei(maxMintableFee.toString(), 'ether')} FEE`;
-                const redeemableFeed = debt > 0 ? (parseFloat(web3.utils.fromWei(debt, 'ether')) * parseFloat(web3.utils.fromWei(feedPrice, 'ether')) * 10**18) / 10**18 : 0;
+
+                const redeemableFeed = debt > 0 ? (new web3.utils.BN(debt).mul(ten18BN)).div(feedPrice) : new web3.utils.BN(0);
                 document.getElementById('redeemableFeed').innerText = `${web3.utils.fromWei(redeemableFeed.toString(), 'ether')} FEED`;
             } catch (error) { console.error('Error updating balances:', error); }
         }
@@ -250,7 +265,7 @@
             }
             try {
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
                 const formattedPrice = `${(parseFloat(web3.utils.fromWei(feedPrice.toString(), 'ether'))).toFixed(13)} USDT`;
                 document.getElementById('feedPrice').innerText = formattedPrice;
                 document.getElementById('mintFeedPrice').innerText = formattedPrice;
@@ -279,8 +294,6 @@
                 const collateralRatio = await contract.methods.getCollateralRatio(targetAddress).call();
                 const debt = await contract.methods.debt(targetAddress).call();
                 const collateral = await contract.methods.collateral(targetAddress).call();
-                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
                 document.getElementById('targetCollateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
                 document.getElementById('liquidatableFee').innerText = `${web3.utils.fromWei(debt, 'ether')} FEE`;
                 document.getElementById('liquidatableCollateral').innerText = web3.utils.fromWei(collateral, 'ether');
@@ -329,11 +342,8 @@
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
                 if (BigInt(feedBalance) <= 0) { showModal('Insufficient FEED balance to mint!'); return; }
 
-                // Convert to ether (18 decimals) as a string to avoid floating point issues
-                const feedBalanceEther = web3.utils.fromWei(feedBalance, 'ether');
-                const feedBalanceBigInt = BigInt(feedBalance);
-
                 // Calculate feedAmount as a percentage of the balance (in wei)
+                const feedBalanceBigInt = BigInt(feedBalance);
                 const percentageBigInt = BigInt(percentage);
                 const hundredBigInt = BigInt(100);
                 const feedAmountWei = (feedBalanceBigInt * percentageBigInt) / hundredBigInt;
@@ -341,7 +351,7 @@
 
                 // Get feed price
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
 
                 // Calculate maxMintableFee
                 const feedPriceBN = new web3.utils.BN(feedPrice);
@@ -365,11 +375,18 @@
             try {
                 const debt = await contract.methods.debt(accounts[0]).call();
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
-                const debtEther = parseFloat(web3.utils.fromWei(debt, 'ether'));
-                const burnAmount = debtEther * (percentage / 100);
-                const redeemableFeed = burnAmount > 0 ? (web3.utils.toWei(burnAmount.toString(), 'ether') * 10**18) / feedPrice : 0;
-                document.getElementById('burnFeeInput').value = burnAmount.toFixed(18);
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
+
+                const debtBN = new web3.utils.BN(debt);
+                const percentageBN = new web3.utils.BN(percentage);
+                const hundredBN = new web3.utils.BN(100);
+                const burnAmountWei = debtBN.mul(percentageBN).div(hundredBN);
+                const burnAmountEther = web3.utils.fromWei(burnAmountWei.toString(), 'ether');
+
+                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
+                const redeemableFeed = burnAmountWei.gt(new web3.utils.BN(0)) ? (burnAmountWei.mul(ten18BN)).div(feedPrice) : new web3.utils.BN(0);
+
+                document.getElementById('burnFeeInput').value = burnAmountEther;
                 document.getElementById('redeemableFeed').innerText = `${web3.utils.fromWei(redeemableFeed.toString(), 'ether')} FEED`;
             } catch (error) { showModal(`Error setting burn percentage: ${error.message}`); }
         }
@@ -381,8 +398,16 @@
             try {
                 const feedWei = web3.utils.toWei(feedAmount.toString(), 'ether');
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
-                const feeAmount = (feedWei * 100 * 10**18) / (feedPrice * 150 * 10**16);
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
+                const hundredBN = new web3.utils.BN(100);
+                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
+                const minCollateralRatioBN = new web3.utils.BN('150000000000000000000'); // 150 * 10^16
+
+                const feedWeiBN = new web3.utils.BN(feedWei);
+                const numerator = feedWeiBN.mul(hundredBN).mul(ten18BN);
+                const denominator = feedPrice.mul(minCollateralRatioBN);
+                const feeAmount = numerator.div(denominator);
+
                 await feedContract.methods.approve(contractAddress, feedWei).send({ from: accounts[0] });
                 showModal(`Minting ${web3.utils.fromWei(feeAmount.toString(), 'ether')} FEE with ${feedAmount} FEED... ⛏️`);
                 await contract.methods.mint(feeAmount.toString()).send({ from: accounts[0] });
@@ -398,8 +423,9 @@
             try {
                 const feeWei = web3.utils.toWei(feeAmount.toString(), 'ether');
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
-                const feedAmount = (feeWei * 10**18) / feedPrice;
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
+                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
+                const feedAmount = (new web3.utils.BN(feeWei).mul(ten18BN)).div(feedPrice);
                 showModal(`Burning ${feeAmount} FEE to redeem ${web3.utils.fromWei(feedAmount.toString(), 'ether')} FEED... 🔥`);
                 await contract.methods.burn(feeWei).send({ from: accounts[0] });
                 showModal(`Burned ${feeAmount} FEE and reclaimed ${web3.utils.fromWei(feedAmount.toString(), 'ether')} FEED! 🚀`);
