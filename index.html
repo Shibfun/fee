@@ -403,11 +403,10 @@
             try {
                 const allowance = await feedContract.methods.allowance(accounts[0], contractAddress).call();
                 if (new web3.utils.BN(allowance).lt(amountWei)) {
-                    const maxAmount = web3.utils.toWei('1000000000000', 'ether');
+                    const maxAmount = web3.utils.toBN('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
                     showModal('Authorizing FEED... ⏳');
                     await feedContract.methods.approve(contractAddress, maxAmount).send({ from: accounts[0], gas: 100000 });
-                    showModal('Authorization successful! Please confirm the mint transaction. ✅');
-                    return true;
+                    showModal('Authorization successful! Please confirm the transaction. ✅');
                 }
                 return true;
             } catch (error) {
@@ -433,7 +432,7 @@
                 document.getElementById('mintFeedInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Mint failed: ${error.message}`); }
-            finally { isOperationInProgress = false; document.getElementById('mintButton').classList.remove('loading'); }
+            finally { isOperationInProgress = false; mintButton.classList.remove('loading'); }
         }
 
         async function addCollateral() {
@@ -453,7 +452,7 @@
                 document.getElementById('addCollateralInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Add collateral failed: ${error.message}`); }
-            finally { isOperationInProgress = false; document.getElementById('addCollateralButton').classList.remove('loading'); }
+            finally { isOperationInProgress = false; addCollateralButton.classList.remove('loading'); }
         }
 
         async function burnFee() {
@@ -471,7 +470,7 @@
                 document.getElementById('burnFeeInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Burn failed: ${error.message}`); }
-            finally { isOperationInProgress = false; document.getElementById('burnButton').classList.remove('loading'); }
+            finally { isOperationInProgress = false; burnButton.classList.remove('loading'); }
         }
 
         async function liquidateUser() {
@@ -487,7 +486,7 @@
                 showModal('Transaction successful! 💰');
                 updateBalances(); updateFeedPrice(); updateTargetCollateralRatio(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Liquidation failed: ${error.message}`); }
-            finally { isOperationInProgress = false; document.getElementById('liquidateButton').classList.remove('loading'); }
+            finally { isOperationInProgress = false; liquidateButton.classList.remove('loading'); }
         }
 
         setInterval(() => { if (!isOperationInProgress) updateBalances(); }, 5000);
