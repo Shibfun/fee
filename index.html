@@ -215,18 +215,18 @@
                 const thresholdBN = new web3.utils.BN(liquidationThreshold);
 
                 if (debtBN.isZero() || collateralBN.isZero() || feedPriceBN.isZero()) {
-                    document.getElementById('liquidationPrice').innerText = 'N/A';
+                    document.getElementById('liquidationPrice').innerText = 'N/A USDT';
                     document.getElementById('liquidationPrice').className = 'liquidation-safe';
                 } else {
-                    const collateralValue = collateralBN.mul(feedPriceBN).div(new web3.utils.BN('10').pow(new web3.utils.BN('18')));
-                    const liquidationPrice = debtBN.mul(new web3.utils.BN('10').pow(new web3.utils.BN('18'))).div(collateralBN).mul(thresholdBN).div(new web3.utils.BN('100'));
+                    // 修正后的清算价格计算
+                    const liquidationPriceBN = debtBN.mul(thresholdBN).div(new web3.utils.BN('100')).div(collateralBN);
+                    const liquidationPrice = parseFloat(web3.utils.fromWei(liquidationPriceBN.toString(), 'ether'));
                     const currentPrice = parseFloat(web3.utils.fromWei(feedPrice.toString(), 'ether'));
-                    const liquidPrice = parseFloat(web3.utils.fromWei(liquidationPrice.toString(), 'ether'));
 
-                    document.getElementById('liquidationPrice').innerText = `${liquidPrice.toFixed(5)} USDT`;
-                    if (currentPrice > liquidPrice * 1.5) {
+                    document.getElementById('liquidationPrice').innerText = `${liquidationPrice.toFixed(18)} USDT`;
+                    if (currentPrice > liquidationPrice * 1.5) {
                         document.getElementById('liquidationPrice').className = 'liquidation-safe';
-                    } else if (currentPrice > liquidPrice) {
+                    } else if (currentPrice > liquidationPrice) {
                         document.getElementById('liquidationPrice').className = 'liquidation-warning';
                     } else {
                         document.getElementById('liquidationPrice').className = 'liquidation-danger';
