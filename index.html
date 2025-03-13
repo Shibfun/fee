@@ -133,27 +133,28 @@
 
         async function connectWallet() {
             const connectButton = document.getElementById('connectButton');
-            if (!window.ethereum) { showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.'); return; }
-            connectButton.classList.add('loading');
-            web3 = new Web3(window.ethereum);
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            accounts = await web3.eth.getAccounts();
-            if (!accounts.length) { showModal('Please unlock your wallet or connect it.'); return; }
-            const chainId = await web3.eth.getChainId();
-            if (chainId !== 109) {
-                try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: web3.utils.numberToHex(109) }] }); }
-                catch (switchError) {
-                    if (switchError.code === 4902) { await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibariumMainnet] }); }
-                    else { showModal('Failed to switch network. Please add Shibarium manually.'); return; }
+            try {
+                if (!window.ethereum) { showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.'); return; }
+                connectButton.classList.add('loading');
+                web3 = new Web3(window.ethereum);
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                accounts = await web3.eth.getAccounts();
+                if (!accounts.length) { showModal('Please unlock your wallet or connect it.'); return; }
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 109) {
+                    try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: web3.utils.numberToHex(109) }] }); }
+                    catch (switchError) { if (switchError.code === 4902) { await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibariumMainnet] }); } else { showModal('Failed to switch network. Please add Shibarium manually.'); return; } }
                 }
-            }
-            document.getElementById('walletAddress').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
-            contract = new web3.eth.Contract(contractABI, contractAddress);
-            feedContract = new web3.eth.Contract(FEED_ABI, FEED_ADDRESS);
-            showModal('Connected to Shibarium successfully! 🎉');
-            updateBalances();
-            updateFeedPrice();
-            connectButton.classList.remove('loading');
+                document.getElementById('walletAddress').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                feedContract = new web3.eth.Contract(FEED_ABI, FEED_ADDRESS);
+                const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
+                document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
+                showModal('Connected to Shibarium successfully! 🎉');
+                updateBalances();
+                updateFeedPrice();
+            } catch (error) { showModal(`Connection failed: ${error.message}`); }
+            finally { connectButton.classList.remove('loading'); }
         }
 
         async function updateBalances() {
@@ -199,7 +200,7 @@
             }
         }
 
-        async function setMintPercentage  {
+        async function setMintPercentage(percentage) {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             try {
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
