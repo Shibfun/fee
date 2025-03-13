@@ -8,41 +8,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {margin:0;padding:0;box-sizing:border-box}
-        body {font-family:'Arial',sans-serif;background:url('images/background.png') no-repeat center center fixed;background-size:cover;color:#fff;line-height:1.4;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+        body {font-family:'Arial',sans-serif;background:url('images/background.png') no-repeat center center fixed;background-size:cover;color:#fff;line-height:1.6;display:flex;flex-direction:column;align-items:center;min-height:100vh}
         body::before {content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:inherit;filter:blur(5px);z-index:-1}
         .header,.container,footer,.modal {position:relative;z-index:1}
-        .header {padding:10px 0;text-align:center;width:100%}
-        .header-top {display:flex;justify-content:space-between;align-items:center;padding:0 15px;height:40px}
-        .header-top .balance {font-size:1.1em;color:#F4A261}
-        .header-top .actions {display:flex;gap:10px}
-        .action-btn {background:#34495E;color:#fff;border:none;padding:5px 10px;border-radius:10px;font-size:0.8em;cursor:pointer}
-        .action-btn i {font-size:1em}
-        .container {width:100%;max-width:400px;padding:0 10px;flex-grow:1;display:flex;flex-direction:column;gap:15px}
-        .section {background:rgba(44,62,80,0.9);padding:15px;border-radius:15px;box-shadow:0 2px 5px rgba(0,0,0,0.3);text-align:center}
-        .section-title {font-size:1.1em;color:#F4A261;margin-bottom:10px}
-        .button-group {display:flex;justify-content:center;gap:10px;margin-top:10px}
-        button {background:#F4A261;color:#fff;border:none;padding:8px 15px;border-radius:20px;cursor:pointer;font-size:0.9em;transition:background 0.3s}
-        button:hover {background:#E07A5F}
+        .header {padding:15px 0;text-align:center;width:100%;background:linear-gradient(180deg,rgba(44,62,80,0.9),rgba(44,62,80,0.5));box-shadow:0 2px 10px rgba(0,0,0,0.3)}
+        .header-top {display:flex;justify-content:space-between;align-items:center;padding:0 20px;height:50px}
+        .header-top .balance {font-size:1.2em;color:#F4A261;font-weight:600}
+        .header-top .actions {display:flex;gap:12px}
+        .action-btn {background:#34495E;color:#fff;border:none;padding:8px 12px;border-radius:12px;font-size:0.9em;cursor:pointer;transition:background 0.3s}
+        .action-btn:hover {background:#F4A261}
+        .action-btn i {font-size:1.1em}
+        .container {width:100%;max-width:420px;padding:20px 10px;flex-grow:1;display:flex;flex-direction:column;gap:20px}
+        .section {background:linear-gradient(145deg,rgba(44,62,80,0.95),rgba(44,62,80,0.85));padding:20px;border-radius:20px;box-shadow:0 4px 15px rgba(0,0,0,0.4);text-align:center;transition:transform 0.2s}
+        .section:hover {transform:scale(1.02)}
+        .section-title {font-size:1.3em;color:#F4A261;margin-bottom:15px;font-weight:600;letter-spacing:1px}
+        .button-group {display:flex;justify-content:center;gap:12px;margin-top:15px}
+        button {background:#F4A261;color:#fff;border:none;padding:10px 20px;border-radius:25px;cursor:pointer;font-size:1em;font-weight:500;letter-spacing:0.5px;transition:background 0.3s,transform 0.2s}
+        button:hover {background:#E07A5F;transform:scale(1.05)}
         button.loading {opacity:0.7;pointer-events:none}
-        .input-group {display:flex;flex-direction:column;gap:8px;margin:10px 0}
-        input {padding:8px;border:none;border-radius:10px;background:#34495E;color:#fff;font-size:0.9em;text-align:center}
-        input:focus {outline:none;box-shadow:0 0 3px #F4A261}
-        .percentage-buttons {display:flex;justify-content:center;gap:5px;margin:10px 0}
-        .percentage-btn {background:#F4A261;color:#fff;border:none;padding:6px 10px;border-radius:15px;font-size:0.8em;cursor:pointer;transition:background 0.3s}
-        .percentage-btn:hover {background:#E07A5F}
-        .info-panel {background:#34495E;padding:10px;border-radius:10px;margin-top:10px;font-size:0.8em;color:#fff}
-        .liquidation-list {max-height:200px;overflow-y:auto;background:#34495E;padding:10px;border-radius:10px;margin-top:10px;font-size:0.8em;color:#fff}
-        .liquidation-item {display:flex;justify-content:space-between;padding:5px;border-bottom:1px solid #F4A261}
+        .input-group {display:flex;flex-direction:column;gap:10px;margin:15px 0}
+        input {padding:10px;border:none;border-radius:15px;background:#34495E;color:#fff;font-size:1em;text-align:center;font-weight:500}
+        input:focus {outline:none;box-shadow:0 0 5px #F4A261}
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {-webkit-appearance:none;margin:0}
+        input[type="number"] {-moz-appearance:textfield}
+        .percentage-buttons {display:flex;justify-content:center;gap:8px;margin:15px 0}
+        .percentage-btn {background:#F4A261;color:#fff;border:none;padding:8px 12px;border-radius:15px;font-size:0.9em;cursor:pointer;font-weight:500;transition:background 0.3s,transform 0.2s}
+        .percentage-btn:hover {background:#E07A5F;transform:scale(1.05)}
+        .info-panel {background:#34495E;padding:12px;border-radius:15px;margin-top:15px;font-size:0.9em;color:#fff;font-weight:400;letter-spacing:0.5px}
+        .info-panel span {color:#F4A261;font-weight:500}
+        .liquidation-list {max-height:200px;overflow-y:auto;background:#34495E;padding:12px;border-radius:15px;margin-top:15px;font-size:0.9em;color:#fff}
+        .liquidation-item {display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #F4A261}
         .liquidation-item:last-child {border-bottom:none}
         .liquidation-item span {color:#F4A261;cursor:pointer}
         .liquidation-item span:hover {color:#E07A5F}
-        .pagination {display:flex;justify-content:center;gap:10px;margin-top:10px}
+        .pagination {display:flex;justify-content:center;gap:12px;margin-top:15px}
+        .pagination button {background:#F4A261;color:#fff;border:none;padding:8px 12px;border-radius:15px;font-size:0.9em;cursor:pointer}
+        .pagination button:disabled {background:#34495E;cursor:not-allowed}
+        .pagination span {font-size:0.9em;color:#F4A261}
         .modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000}
-        .modal-content {background:#2C3E50;padding:20px;border-radius:15px;text-align:center;color:#fff;max-width:300px;box-shadow:0 2px 5px rgba(0,0,0,0.3)}
-        .modal-content p {margin-bottom:15px;font-size:1em}
-        .modal-content button {background:#F4A261;padding:8px 15px;border-radius:20px;font-size:0.9em}
-        footer {background:rgba(30,42,68,0.8);text-align:center;padding:10px;width:100%;color:#A8B5D4;font-size:0.8em;margin-top:20px}
-        @media (max-width:480px) {button {padding:6px 12px;font-size:0.8em}input {font-size:0.8em}}
+        .modal-content {background:#2C3E50;padding:25px;border-radius:20px;text-align:center;color:#fff;max-width:320px;box-shadow:0 4px 15px rgba(0,0,0,0.5)}
+        .modal-content p {margin-bottom:20px;font-size:1.1em;font-weight:500}
+        .modal-content button {background:#F4A261;padding:10px 20px;border-radius:25px;font-size:1em}
+        footer {background:linear-gradient(180deg,rgba(30,42,68,0.5),rgba(30,42,68,0.9));text-align:center;padding:15px;width:100%;color:#A8B5D4;font-size:0.9em;margin-top:25px}
+        @media (max-width:480px) {button {padding:8px 16px;font-size:0.9em}input {font-size:0.9em}.section-title {font-size:1.2em}}
     </style>
 </head>
 <body>
@@ -69,7 +77,7 @@
                 <button id="mintButton">Mint</button>
             </div>
             <div class="input-group">
-                <input type="text" id="mintFeedInput" placeholder="FEED Amount">
+                <input type="number" id="mintFeedInput" placeholder="FEED Amount (Integer)" step="1" min="0">
             </div>
             <div class="percentage-buttons">
                 <button class="percentage-btn" onclick="setMintPercentage(25)">25%</button>
@@ -77,7 +85,7 @@
                 <button class="percentage-btn" onclick="setMintPercentage(75)">75%</button>
                 <button class="percentage-btn" onclick="setMintPercentage(100)">100%</button>
             </div>
-            <div class="info-panel">FEED Balance: <span id="feedBalance">0.00 FEED</span> | Max Mintable FEE: <span id="maxMintableFee">0.00 FEE</span></div>
+            <div class="info-panel">FEED Balance: <span id="feedBalance">0.000000000000000000 FEED</span> | Max Mintable FEE: <span id="maxMintableFee">0.00 FEE</span> | FEED Price: <span id="mintFeedPrice">0.00 USDT</span></div>
         </div>
         <div class="section">
             <div class="section-title">Burn FEE</div>
@@ -85,7 +93,7 @@
                 <button id="burnButton">Burn</button>
             </div>
             <div class="input-group">
-                <input type="text" id="burnFeeInput" placeholder="FEE Amount">
+                <input type="number" id="burnFeeInput" placeholder="FEE Amount">
             </div>
             <div class="percentage-buttons">
                 <button class="percentage-btn" onclick="setBurnPercentage(25)">25%</button>
@@ -93,7 +101,7 @@
                 <button class="percentage-btn" onclick="setBurnPercentage(75)">75%</button>
                 <button class="percentage-btn" onclick="setBurnPercentage(100)">100%</button>
             </div>
-            <div class="info-panel">Debt: <span id="userDebt">0.00 FEE</span> | Collateral: <span id="userCollateral">0.00 FEED</span> | Ratio: <span id="collateralRatio">N/A</span>% | Redeemable FEED: <span id="redeemableFeed">0.00 FEED</span></div>
+            <div class="info-panel">Debt: <span id="userDebt">0.00 FEE</span> | Collateral: <span id="userCollateral">0.000000000000000000 FEED</span> | Ratio: <span id="collateralRatio">N/A</span>% | Redeemable FEED: <span id="redeemableFeed">0.00 FEED</span></div>
         </div>
         <div class="section">
             <div class="section-title">Liquidate</div>
@@ -103,7 +111,7 @@
             <div class="input-group">
                 <input type="text" id="liquidateAddressInput" placeholder="User Address to Liquidate">
             </div>
-            <div class="info-panel">FEED Price: <span id="feedPrice">0.00 USDT</span> | Target Ratio: <span id="targetCollateralRatio">N/A</span>% | Liquidatable FEE: <span id="liquidatableFee">0.00 FEE</span> | Collateral FEED: <span id="liquidatableCollateral">0.00 FEED</span></div>
+            <div class="info-panel">FEED Price: <span id="feedPrice">0.00 USDT</span> | Target Ratio: <span id="targetCollateralRatio">N/A</span>% | Liquidatable FEE: <span id="liquidatableFee">0.00 FEE</span> | Collateral FEED: <span id="liquidatableCollateral">0.000000000000000000 FEED</span></div>
             <div class="section-title">Liquidatable Addresses</div>
             <div class="liquidation-list" id="liquidationList"></div>
             <div class="pagination" id="pagination"></div>
@@ -217,12 +225,14 @@
         }
 
         async function updateFeedPrice() {
-            if (!web3 || !contract || !accounts) {document.getElementById('feedPrice').innerText='0.00 USDT';return}
+            if (!web3 || !contract || !accounts) {document.getElementById('feedPrice').innerText='0.00 USDT';document.getElementById('mintFeedPrice').innerText='0.00 USDT';return}
             try {
                 const feedPrice = await contract.methods.getFeedPrice().call();
                 document.getElementById('feedPrice').innerText=`${parseFloat(web3.utils.fromWei(feedPrice,'ether')).toFixed(2)} USDT`;
+                document.getElementById('mintFeedPrice').innerText=`${parseFloat(web3.utils.fromWei(feedPrice,'ether')).toFixed(2)} USDT`;
             } catch (error) {
                 document.getElementById('feedPrice').innerText='0.00 USDT';
+                document.getElementById('mintFeedPrice').innerText='0.00 USDT';
                 console.error('Error updating feed price:', error);
             }
         }
@@ -231,14 +241,14 @@
             if (!web3 || !contract || !accounts) {
                 document.getElementById('targetCollateralRatio').innerText='N/A';
                 document.getElementById('liquidatableFee').innerText='0.00 FEE';
-                document.getElementById('liquidatableCollateral').innerText='0.00 FEED';
+                document.getElementById('liquidatableCollateral').innerText='0.000000000000000000 FEED';
                 return;
             }
             const targetAddress = document.getElementById('liquidateAddressInput').value;
             if (!web3.utils.isAddress(targetAddress)) {
                 document.getElementById('targetCollateralRatio').innerText='N/A';
                 document.getElementById('liquidatableFee').innerText='0.00 FEE';
-                document.getElementById('liquidatableCollateral').innerText='0.00 FEED';
+                document.getElementById('liquidatableCollateral').innerText='0.000000000000000000 FEED';
                 return;
             }
             try {
@@ -251,7 +261,7 @@
             } catch (error) {
                 document.getElementById('targetCollateralRatio').innerText='N/A';
                 document.getElementById('liquidatableFee').innerText='0.00 FEE';
-                document.getElementById('liquidatableCollateral').innerText='0.00 FEED';
+                document.getElementById('liquidatableCollateral').innerText='0.000000000000000000 FEED';
                 console.error('Error updating target collateral ratio:', error);
             }
         }
@@ -293,9 +303,9 @@
                 const feedPrice = await contract.methods.getFeedPrice().call();
                 const feedBalanceEther = parseFloat(web3.utils.fromWei(feedBalance,'ether'));
                 const feedPriceEther = parseFloat(web3.utils.fromWei(feedPrice,'ether'));
-                const feedAmount = feedBalanceEther * (percentage / 100);
+                const feedAmount = Math.floor(feedBalanceEther * (percentage / 100));
                 const maxMintableFee = (web3.utils.toWei(feedAmount.toString(), 'ether') * 100 * 10**18) / (feedPrice * 150 * 10**16);
-                document.getElementById('mintFeedInput').value=feedAmount.toFixed(18);
+                document.getElementById('mintFeedInput').value=feedAmount;
                 document.getElementById('maxMintableFee').innerText=`${parseFloat(web3.utils.fromWei(maxMintableFee.toString(),'ether')).toFixed(2)} FEE`;
             } catch (error) {showModal(`Error setting mint percentage: ${error.message}`)}
         }
@@ -309,20 +319,20 @@
                 const feedPriceEther = parseFloat(web3.utils.fromWei(feedPrice,'ether'));
                 const burnAmount = debtEther * (percentage / 100);
                 const redeemableFeed = (web3.utils.toWei(burnAmount.toString(), 'ether') * 10**18) / feedPrice;
-                document.getElementById('burnFeeInput').value=burnAmount.toFixed(18);
-                document.getElementById('redeemableFeed').innerText=`${parseFloat(web3.utils.fromWei(redeemableFeed.toString(),'ether')).toFixed(18)} FEED`;
+                document.getElementById('burnFeeInput').value=burnAmount.toFixed(2);
+                document.getElementById('redeemableFeed').innerText=`${parseFloat(web3.utils.fromWei(redeemableFeed.toString(),'ether')).toFixed(2)} FEED`;
             } catch (error) {showModal(`Error setting burn percentage: ${error.message}`)}
         }
 
         async function mintFee() {
             if (!web3 || !contract || !accounts) {showModal('Please connect your wallet first! 🔧'); return}
             const feedAmount = document.getElementById('mintFeedInput').value;
-            if (!feedAmount || feedAmount <= 0) {showModal('Please enter a valid FEED amount!'); return}
+            if (!feedAmount || !Number.isInteger(Number(feedAmount)) || feedAmount <= 0) {showModal('Please enter a valid integer FEED amount!'); return}
             try {
-                const feedWei = web3.utils.toWei(feedAmount,'ether');
+                const feedWei = web3.utils.toWei(feedAmount.toString(), 'ether');
                 const feedPrice = await contract.methods.getFeedPrice().call();
                 const feeAmount = (feedWei * 100 * 10**18) / (feedPrice * 150 * 10**16);
-                await feedContract.methods.approve(contractAddress,feedWei).send({from:accounts[0]});
+                await feedContract.methods.approve(contractAddress, feedWei).send({from:accounts[0]});
                 showModal(`Minting ${parseFloat(web3.utils.fromWei(feeAmount.toString(),'ether')).toFixed(2)} FEE with ${feedAmount} FEED... ⛏️`);
                 await contract.methods.mint(feeAmount.toString()).send({from:accounts[0]});
                 showModal(`Minted ${parseFloat(web3.utils.fromWei(feeAmount.toString(),'ether')).toFixed(2)} FEE successfully! 💎`);
@@ -335,7 +345,7 @@
             const feeAmount = document.getElementById('burnFeeInput').value;
             if (!feeAmount || feeAmount <= 0) {showModal('Please enter a valid FEE amount!'); return}
             try {
-                const feeWei = web3.utils.toWei(feeAmount,'ether');
+                const feeWei = web3.utils.toWei(feeAmount.toString(), 'ether');
                 const feedPrice = await contract.methods.getFeedPrice().call();
                 const feedAmount = (feeWei * 10**18) / feedPrice;
                 showModal(`Burning ${feeAmount} FEE to redeem ${parseFloat(web3.utils.fromWei(feedAmount.toString(),'ether')).toFixed(2)} FEED... 🔥`);
@@ -362,7 +372,7 @@
         }
 
         setInterval(updateBalances, 5000);
-        setInterval(updateFeedPrice, 5000);
+        setInterval(updateFeedPrice, 60000);
         setInterval(updateTargetCollateralRatio, 5000);
         setInterval(fetchLiquidatableUsers, 60000);
         document.getElementById('connectButton').addEventListener('click', connectWallet);
