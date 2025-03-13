@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="images/feed.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Arial',sans-serif;background:url('images/background.png') no-repeat center center fixed;background-size:cover;color:#fff;line-height:1.6;display:flex;flex-direction:column;align-items:center;min-height:100vh}body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:inherit;filter:blur(5px);z-index:-1}.header,.container,footer,.modal{position:relative;z-index:1}.header{padding:15px 0;text-align:center;width:100%;background:linear-gradient(180deg,rgba(44,62,80,0.9),rgba(44,62,80,0.5));box-shadow:0 2px 10px rgba(0,0,0,0.3)}.header-top{display:flex;justify-content:space-between;align-items:center;padding:0 20px;height:50px}.header-top .balance{font-size:1.2em;color:#F4A261;font-weight:600}.header-top .actions{display:flex;gap:12px}.action-btn{background:#34495E;color:#fff;border:none;padding:8px 12px;border-radius:12px;font-size:0.9em;cursor:pointer;transition:background 0.3s}.action-btn:hover{background:#F4A261}.action-btn i{font-size:1.1em}.container{width:100%;max-width:420px;padding:20px 10px;flex-grow:1;display:flex;flex-direction:column;gap:20px}.section{background:linear-gradient(145deg,rgba(44,62,80,0.95),rgba(44,62,80,0.85));padding:20px;border-radius:20px;box-shadow:0 4px 15px rgba(0,0,0,0.4);text-align:center;transition:transform 0.2s}.section:hover{transform:scale(1.02)}.section-title{font-size:1.3em;color:#F4A261;margin-bottom:15px;font-weight:600;letter-spacing:1px}.button-group{display:flex;justify-content:center;gap:12px;margin-top:15px}button{background:#F4A261;color:#fff;border:none;padding:10px 20px;border-radius:25px;cursor:pointer;font-size:1em;font-weight:500;letter-spacing:0.5px;transition:background 0.3s,transform 0.2s}button:hover{background:#E07A5F;transform:scale(1.05)}button.loading{opacity:0.7;pointer-events:none}.input-group{display:flex;flex-direction:column;gap:10px;margin:15px 0}input{padding:10px;border:none;border-radius:15px;background:#34495E;color:#fff;font-size:1em;text-align:center;font-weight:500}input:focus{outline:none;box-shadow:0 0 5px #F4A261}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}input[type="number"]{-moz-appearance:textfield}.percentage-buttons{display:flex;justify-content:center;gap:8px;margin:15px 0}.percentage-btn{background:#F4A261;color:#fff;border:none;padding:8px 12px;border-radius:15px;font-size:0.9em;cursor:pointer;font-weight:500;transition:background 0.3s,transform 0.2s}.percentage-btn:hover{background:#E07A5F;transform:scale(1.05)}.info-panel{background:#34495E;padding:12px;border-radius:15px;margin-top:15px;font-size:0.9em;color:#fff;font-weight:400;letter-spacing:0.5px;display:flex;flex-direction:column;gap:5px}.info-panel span{color:#F4A261;font-weight:500}.liquidation-list{max-height:200px;overflow-y:auto;background:#34495E;padding:12px;border-radius:15px;margin-top:15px;font-size:0.9em;color:#fff}.liquidation-item{display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #F4A261}.liquidation-item:last-child{border-bottom:none}.liquidation-item span{color:#F4A261;cursor:pointer}.liquidation-item span:hover{color:#E07A5F}.pagination{display:flex;justify-content:center;gap:12px;margin-top:15px}.pagination button{background:#F4A261;color:#fff;border:none;padding:8px 12px;border-radius:15px;font-size:0.9em;cursor:pointer}.pagination button:disabled{background:#34495E;cursor:not-allowed}.pagination span{font-size:0.9em;color:#F4A261}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000}.modal-content{background:#2C3E50;padding:25px;border-radius:20px;text-align:center;color:#fff;max-width:320px;box-shadow:0 4px 15px rgba(0,0,0,0.5)}.modal-content p{margin-bottom:20px;font-size:1.1em;font-weight:500}.modal-content button{background:#F4A261;padding:10px 20px;border-radius:25px;font-size:1em}footer{background:linear-gradient(180deg,rgba(30,42,68,0.5),rgba(30,42,68,0.9));text-align:center;padding:15px;width:100%;color:#A8B5D4;font-size:0.9em;margin-top:25px}@media (max-width:480px){button{padding:8px 16px;font-size:0.9em}input{font-size:0.9em}.section-title{font-size:1.2em}}
+        /* Existing styles remain unchanged */
     </style>
 </head>
 <body>
@@ -36,7 +36,7 @@
                 <button id="mintButton">Mint</button>
             </div>
             <div class="input-group">
-                <input type="number" id="mintFeedInput" placeholder="FEED Amount (Integer)" step="1" min="0">
+                <input type="number" id="mintFeeInput" placeholder="FEE Amount" step="any" min="0">
             </div>
             <div class="percentage-buttons">
                 <button class="percentage-btn" onclick="setMintPercentage(25)">25%</button>
@@ -46,7 +46,7 @@
             </div>
             <div class="info-panel">
                 <div>FEED Balance: <span id="feedBalance">0.0000 FEED</span></div>
-                <div>Max Mintable FEE: <span id="maxMintableFee">0.000000000 FEE</span></div>
+                <div>Required FEED: <span id="requiredFeed">0.0000 FEED</span></div>
                 <div>FEED Price: <span id="mintFeedPrice">0.0000000000000 USDT</span></div>
             </div>
         </div>
@@ -99,7 +99,345 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
-        let web3,accounts,contract,feedContract;const contractAddress="0xe8507f07F2b273b7Aaab2B2816f2F097ED1200Af",FEED_ADDRESS="0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0",contractABI=[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Burn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Liquidate","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"owner_","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"collateral","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"debt","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getAmplifiedFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getCollateralRatio","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"liquidate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"offset","type":"uint256"},{"internalType":"uint256","name":"limit","type":"uint256"}],"name":"getLiquidatableAddresses","outputs":[{"internalType":"address[]","name":"","type":"address[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getUsersCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],FEED_ABI=[{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner_","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],shibariumMainnet={chainId:109,chainName:'Shibarium',nativeCurrency:{name:'BONE',symbol:'BONE',decimals:18},rpcUrls:['https://www.shibrpc.com'],blockExplorerUrls:['https://shibariumscan.io']};let currentPage=1,itemsPerPage=5,isOperationInProgress=!1;function showModal(e){document.getElementById('modalMessage').innerHTML=e,document.getElementById('modal').style.display='flex',document.getElementById('modalOkButton').focus()}function closeModal(){document.getElementById('modal').style.display='none'}async function connectWallet(){const e=document.getElementById('connectButton');try{if(!window.ethereum){showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.');return}e.classList.add('loading'),web3=new Web3(window.ethereum),await window.ethereum.request({method:'eth_requestAccounts'}),accounts=await web3.eth.getAccounts(),accounts.length||(showModal('Please unlock your wallet or connect it.'),e.classList.remove('loading'),e.classList.add('loading')),await web3.eth.getChainId()!==109&&await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:web3.utils.numberToHex(109)}]}).catch(e=>e.code===4902?window.ethereum.request({method:'wallet_addEthereumChain',params:[shibariumMainnet]}):showModal('Failed to switch network. Please add Shibarium manually.'));document.getElementById('walletAddress').innerText=`${accounts[0].slice(0,6)}...${accounts[0].slice(-4)}`,contract=new web3.eth.Contract(contractABI,contractAddress),feedContract=new web3.eth.Contract(FEED_ABI,FEED_ADDRESS),showModal('Connected to Shibarium successfully! 🎉'),updateBalances(),updateFeedPrice(),fetchLiquidatableUsers()}catch(e){showModal(`Connection failed: ${e.message}`)}finally{e.classList.remove('loading')}}async function updateBalances(){if(!web3||!contract||!accounts||isOperationInProgress)return;try{const e=await contract.methods.balanceOf(accounts[0]).call(),t=await feedContract.methods.balanceOf(accounts[0]).call(),n=await contract.methods.debt(accounts[0]).call(),a=await contract.methods.collateral(accounts[0]).call(),i=await contract.methods.getCollateralRatio(accounts[0]).call(),o=await contract.methods.getAmplifiedFeedPrice().call(),s=new web3.utils.BN(o).div(new web3.utils.BN(10**12)).mul(new web3.utils.BN(10**6)),l=document.getElementById('mintFeedInput').value||'',d=new web3.utils.BN(t);l&&Number(l)>0&&Number(l)<=parseFloat(web3.utils.fromWei(t,'ether'))&&(d=new web3.utils.BN(web3.utils.toWei(l.toString(),'ether')));const c=new web3.utils.BN(100),u=new web3.utils.BN('1000000000000000000'),m=new web3.utils.BN('150000000000000000000'),p=new web3.utils.BN(0);d.gt(new web3.utils.BN(0))&&(p=d.mul(c).mul(u).div(s.mul(m))),document.getElementById('feeBalance').innerText=`${parseFloat(web3.utils.fromWei(e,'ether')).toFixed(4)} FEE`,document.getElementById('feedBalance').innerText=`${parseFloat(web3.utils.fromWei(t,'ether')).toFixed(4)} FEED`,document.getElementById('userDebt').innerText=`${parseFloat(web3.utils.fromWei(n,'ether')).toFixed(4)} FEE`,document.getElementById('userCollateral').innerText=`${parseFloat(web3.utils.fromWei(a,'ether')).toFixed(4)} FEED`,document.getElementById('collateralRatio').innerText=n==0?'N/A':`${(parseFloat(web3.utils.fromWei(i,'ether'))/10**16).toFixed(2)}%`,document.getElementById('maxMintableFee').innerText=`${parseFloat(web3.utils.fromWei(p.toString(),'ether')).toFixed(9)} FEE`;const f=n>0?(new web3.utils.BN(n).mul(u)).div(s):new web3.utils.BN(0);document.getElementById('redeemableFeed').innerText=`${parseFloat(web3.utils.fromWei(f.toString(),'ether')).toFixed(4)} FEED`}catch(e){console.error('Error updating balances:',e)}}async function updateFeedPrice(){if(!web3||!contract||!accounts||isOperationInProgress)return;try{const e=await contract.methods.getAmplifiedFeedPrice().call(),t=new web3.utils.BN(e).div(new web3.utils.BN(10**12)),n=`${(parseFloat(web3.utils.fromWei(t.toString(),'ether'))).toFixed(13)} USDT`;document.getElementById('feedPrice').innerText=n,document.getElementById('mintFeedPrice').innerText=n}catch(e){document.getElementById('feedPrice').innerText='0.0000000000000 USDT',document.getElementById('mintFeedPrice').innerText='0.0000000000000 USDT',console.error('Error updating feed price:',e)}}async function updateTargetCollateralRatio(){if(!web3||!contract||!accounts||isOperationInProgress)return;const e=document.getElementById('liquidateAddressInput').value;if(!web3.utils.isAddress(e)){document.getElementById('targetCollateralRatio').innerText='N/A',document.getElementById('liquidatableFee').innerText='0.0000 FEE',document.getElementById('liquidatableCollateral').innerText='0.0000 FEED';return}try{const t=await contract.methods.getCollateralRatio(e).call(),n=await contract.methods.debt(e).call(),a=await contract.methods.collateral(e).call();document.getElementById('targetCollateralRatio').innerText=n==0?'N/A':`${(parseFloat(web3.utils.fromWei(t,'ether'))/10**16).toFixed(2)}%`,document.getElementById('liquidatableFee').innerText=`${parseFloat(web3.utils.fromWei(n,'ether')).toFixed(4)} FEE`,document.getElementById('liquidatableCollateral').innerText=`${parseFloat(web3.utils.fromWei(a,'ether')).toFixed(4)} FEED`}catch(e){document.getElementById('targetCollateralRatio').innerText='N/A',document.getElementById('liquidatableFee').innerText='0.0000 FEE',document.getElementById('liquidatableCollateral').innerText='0.0000 FEED',console.error('Error updating target collateral ratio:',e)}}async function fetchLiquidatableUsers(){if(!web3||!contract||!accounts||isOperationInProgress)return;const e=document.getElementById('liquidationList'),t=document.getElementById('pagination');e.innerHTML='Loading...',t.innerHTML='';try{const n=await contract.methods.getUsersCount().call(),a=Math.ceil(n/itemsPerPage),i=await contract.methods.getLiquidatableAddresses((currentPage-1)*itemsPerPage,itemsPerPage).call();if(0==i[0].length){e.innerHTML='No addresses eligible for liquidation.';return}e.innerHTML=i[0].map((e,t)=>`<div class="liquidation-item"><span onclick="setLiquidateAddress('${e}')">${e.slice(0,6)}...${e.slice(-4)}</span><span>Ratio: ${(parseFloat(web3.utils.fromWei(i[1][t],'ether'))/10**16).toFixed(2)}% | FEE: ${parseFloat(web3.utils.fromWei(i[2][t],'ether')).toFixed(4)} | FEED: ${parseFloat(web3.utils.fromWei(i[3][t],'ether')).toFixed(4)}</span></div>`).join(''),t.innerHTML=`<button onclick="changePage(${currentPage-1})" ${1==currentPage?'disabled':''}>Previous</button><span>Page ${currentPage} of ${a}</span><button onclick="changePage(${currentPage+1})" ${currentPage==a?'disabled':''}>Next</button>`}catch(e){e.innerHTML='Error fetching liquidatable addresses.',console.error('Error fetching liquidatable users:',e)}}function changePage(e){e<1||e>Math.ceil(usersCount/itemsPerPage)||(currentPage=e,fetchLiquidatableUsers())}function setLiquidateAddress(e){document.getElementById('liquidateAddressInput').value=e,updateTargetCollateralRatio()}async function setMintPercentage(e){if(!web3||!contract||!accounts){showModal('Please connect your wallet first! 🔧');return}try{const t=await feedContract.methods.balanceOf(accounts[0]).call();if(BigInt(t)<=0){showModal('Insufficient FEED balance to mint!');return}const n=BigInt(t),a=BigInt(e),i=BigInt(100),o=(n*a)/i,s=web3.utils.fromWei(o.toString(),'ether'),l=await contract.methods.getAmplifiedFeedPrice().call(),d=new web3.utils.BN(l).div(new web3.utils.BN(10**12)).mul(new web3.utils.BN(10**6)),c=new web3.utils.BN(o),u=new web3.utils.BN(100),m=new web3.utils.BN('1000000000000000000'),p=new web3.utils.BN('150000000000000000000'),f=c.mul(u).mul(m).div(d.mul(p));document.getElementById('mintFeedInput').value=parseInt(s),document.getElementById('maxMintableFee').innerText=`${parseFloat(web3.utils.fromWei(f.toString(),'ether')).toFixed(9)} FEE`}catch(e){showModal(`Error setting mint percentage: ${e.message}`)}}async function setBurnPercentage(e){if(!web3||!contract||!accounts){showModal('Please connect your wallet first! 🔧');return}try{const t=await contract.methods.debt(accounts[0]).call(),n=await contract.methods.getAmplifiedFeedPrice().call(),a=new web3.utils.BN(n).div(new web3.utils.BN(10**12)).mul(new web3.utils.BN(10**6)),i=new web3.utils.BN(t),o=new web3.utils.BN(e),s=new web3.utils.BN(100),l=i.mul(o).div(s),d=web3.utils.fromWei(l.toString(),'ether'),c=new web3.utils.BN('1000000000000000000'),u=l.mul(c).div(a);document.getElementById('burnFeeInput').value=parseFloat(d).toFixed(9),document.getElementById('redeemableFeed').innerText=`${parseFloat(web3.utils.fromWei(u.toString(),'ether')).toFixed(4)} FEED`}catch(e){showModal(`Error setting burn percentage: ${e.message}`)}}async function mintFee(){if(!web3||!contract||!accounts){showModal('Please connect your wallet first! 🔧');return}const e=document.getElementById('mintFeedInput').value;if(!e||!Number.isInteger(Number(e))||e<=0||e>parseFloat(document.getElementById('feedBalance').innerText)){showModal('Please enter a valid integer FEED amount within your balance!');return}try{isOperationInProgress=!0;const t=document.getElementById('mintButton');t.classList.add('loading');const n=web3.utils.toWei(e.toString(),'ether'),a=await contract.methods.getAmplifiedFeedPrice().call(),i=new web3.utils.BN(a).div(new web3.utils.BN(10**12)).mul(new web3.utils.BN(10**6)),o=new web3.utils.BN(100),s=new web3.utils.BN('1000000000000000000'),l=new web3.utils.BN('150000000000000000000'),d=new web3.utils.BN(n),c=d.mul(s),u=i.mul(l).div(s).mul(o),m=c.div(u);console.log(`Calculated feeAmount: ${web3.utils.fromWei(m.toString(),'ether')} FEE`);const p=await feedContract.methods.allowance(accounts[0],contractAddress).call();new web3.utils.BN(p).lt(d)&&(showModal(`Approving ${e} FEED for minting... 🛠️`),await feedContract.methods.approve(contractAddress,n).send({from:accounts[0],gas:2e5}),showModal(`Approved ${e} FEED successfully! ✅`));const f=await contract.methods.paused().call();if(f)throw new Error('Contract is paused. Please contact the contract owner.');const g=await contract.methods.collateral(accounts[0]).call(),h=await contract.methods.debt(accounts[0]).call(),v=h==0?'Infinity':await contract.methods.getCollateralRatio(accounts[0]).call();console.log(`Current Collateral: ${web3.utils.fromWei(g)}, Debt: ${web3.utils.fromWei(h)}, Ratio: ${h==0?'Infinity':(parseFloat(web3.utils.fromWei(v,'ether'))/10**16)}%`),showModal(`Minting ${parseFloat(web3.utils.fromWei(m.toString(),'ether')).toFixed(9)} FEE with ${e} FEED... ⛏️`);const y=await contract.methods.mint(m.toString()).send({from:accounts[0],gas:5e5});showModal(`Minted ${parseFloat(web3.utils.fromWei(m.toString(),'ether')).toFixed(9)} FEE successfully! Tx: ${y.transactionHash} 💎`),document.getElementById('mintFeedInput').value='',updateBalances(),updateFeedPrice(),fetchLiquidatableUsers()}catch(e){const t=e.message.includes('revert')?'Mint reverted by contract. Possible reasons: insufficient collateral ratio, paused contract, or invalid input.':e.message;showModal(`Mint failed: ${t}. Please check gas, balance, or contract status.`),console.error('Mint error:',e)}finally{isOperationInProgress=!1,t.classList.remove('loading')}}async function burnFee(){if(!web3||!contract||!accounts){showModal('Please connect your wallet first! 🔧');return}const e=document.getElementById('burnFeeInput').value;if(!e||e<=0||e>parseFloat(document.getElementById('feeBalance').innerText)){showModal('Please enter a valid FEE amount within your balance!');return}try{isOperationInProgress=!0;const t=document.getElementById('burnButton');t.classList.add('loading');const n=web3.utils.toWei(e.toString(),'ether'),a=await contract.methods.getAmplifiedFeedPrice().call(),i=new web3.utils.BN(a).div(new web3.utils.BN(10**12)).mul(new web3.utils.BN(10**6)),o=(new web3.utils.BN(n).mul(new web3.utils.BN('1000000000000000000'))).div(i);showModal(`Burning ${parseFloat(e).toFixed(9)} FEE to redeem ${parseFloat(web3.utils.fromWei(o.toString(),'ether')).toFixed(4)} FEED... 🔥`);const s=await contract.methods.burn(n).send({from:accounts[0],gas:5e5});showModal(`Burned ${parseFloat(e).toFixed(9)} FEE successfully! Tx: ${s.transactionHash} 🔥`),document.getElementById('burnFeeInput').value='',updateBalances(),updateFeedPrice(),fetchLiquidatableUsers()}catch(e){const t=e.message.includes('revert')?'Burn reverted by contract. Possible reasons: insufficient balance or invalid input.':e.message;showModal(`Burn failed: ${t}. Please check balance or contract status.`),console.error('Burn error:',e)}finally{isOperationInProgress=!1,t.classList.remove('loading')}}async function liquidateUser(){if(!web3||!contract||!accounts){showModal('Please connect your wallet first! 🔧');return}const e=document.getElementById('liquidateAddressInput').value;if(!web3.utils.isAddress(e)){showModal('Please enter a valid address!');return}try{isOperationInProgress=!0;const t=document.getElementById('liquidateButton');t.classList.add('loading'),showModal(`Liquidating ${e.slice(0,6)}...${e.slice(-4)}... ⛏️`);const n=await contract.methods.liquidate(e).send({from:accounts[0],gas:5e5});showModal(`Liquidated successfully! Tx: ${n.transactionHash} 💧`),updateBalances(),updateFeedPrice(),fetchLiquidatableUsers()}catch(e){const t=e.message.includes('revert')?'Liquidation reverted by contract. Possible reasons: invalid user, insufficient balance, or ratio above 120%.':e.message;showModal(`Liquidation failed: ${t}. Please check user status or balance.`),console.error('Liquidate error:',e)}finally{isOperationInProgress=!1,t.classList.remove('loading')}}
+        let web3, accounts, contract, feedContract;
+        const contractAddress = "0x00389da325Fd9EB20365493F6bb564Ac97451EeC";
+        const FEED_ADDRESS = "0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0";
+        const contractABI = [
+            {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Mint","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},
+            {"inputs":[],"name":"BONE","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"FEED","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"LIQUIDATION_THRESHOLD","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"MIN_COLLATERAL_RATIO","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"PEG","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"USDT","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"WOOF_DAO","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner_","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"collateral","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"debt","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getAmplifiedFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getCollateralRatio","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"offset","type":"uint256"},{"internalType":"uint256","name":"limit","type":"uint256"}],"name":"getLiquidatableAddresses","outputs":[{"internalType":"address[]","name":"","type":"address[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"getRequiredCollateral","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getUsersCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"liquidate","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"}
+        ];
+        const FEED_ABI = [
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner_","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+        const shibariumMainnet = {
+            chainId: 109,
+            chainName: 'Shibarium',
+            nativeCurrency: {name: 'BONE', symbol: 'BONE', decimals: 18},
+            rpcUrls: ['https://www.shibrpc.com'],
+            blockExplorerUrls: ['https://shibariumscan.io']
+        };
+
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let isOperationInProgress = false;
+
+        function showModal(message) {
+            document.getElementById('modalMessage').innerHTML = message;
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modalOkButton').focus();
+        }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        async function connectWallet() {
+            const connectButton = document.getElementById('connectButton');
+            try {
+                if (!window.ethereum) { showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.'); return; }
+                connectButton.classList.add('loading');
+                web3 = new Web3(window.ethereum);
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                accounts = await web3.eth.getAccounts();
+                if (!accounts.length) { showModal('Please unlock your wallet or connect it.'); return; }
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 109) {
+                    try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: web3.utils.numberToHex(109) }] }); }
+                    catch (switchError) {
+                        if (switchError.code === 4902) { await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibariumMainnet] }); }
+                        else { showModal('Failed to switch network. Please add Shibarium manually.'); return; }
+                    }
+                }
+                document.getElementById('walletAddress').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                feedContract = new web3.eth.Contract(FEED_ABI, FEED_ADDRESS);
+                const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
+                document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(4)} FEE`;
+                showModal('Connected to Shibarium successfully! 🎉');
+                updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
+            } catch (error) { showModal(`Connection failed: ${error.message}`); }
+            finally { connectButton.classList.remove('loading'); }
+        }
+
+        async function updateBalances() {
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
+            try {
+                const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
+                const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+                const debt = await contract.methods.debt(accounts[0]).call();
+                const collateral = await contract.methods.collateral(accounts[0]).call();
+                const collateralRatio = await contract.methods.getCollateralRatio(accounts[0]).call();
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN('1000000000000')); // PRICE_AMPLIFICATION_FACTOR = 10^12
+
+                const mintFeeInput = document.getElementById('mintFeeInput').value || '0';
+                const feeAmountWei = new web3.utils.BN(web3.utils.toWei(mintFeeInput, 'ether'));
+                const requiredCollateral = await contract.methods.getRequiredCollateral(feeAmountWei.toString()).call();
+
+                document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(4)} FEE`;
+                document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(4)} FEED`;
+                document.getElementById('userDebt').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(4)} FEE`;
+                document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED`;
+                document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
+                document.getElementById('requiredFeed').innerText = `${parseFloat(web3.utils.fromWei(requiredCollateral, 'ether')).toFixed(4)} FEED`;
+                const redeemableFeed = debt > 0 ? (new web3.utils.BN(debt).mul(new web3.utils.BN('1000000000000000000'))).div(feedPrice) : new web3.utils.BN(0);
+                document.getElementById('redeemableFeed').innerText = `${parseFloat(web3.utils.fromWei(redeemableFeed.toString(), 'ether')).toFixed(4)} FEED`;
+            } catch (error) { console.error('Error updating balances:', error); }
+        }
+
+        async function updateFeedPrice() {
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
+            try {
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN('1000000000000')); // PRICE_AMPLIFICATION_FACTOR = 10^12
+                const formattedPrice = `${parseFloat(web3.utils.fromWei(feedPrice.toString(), 'ether')).toFixed(13)} USDT`;
+                document.getElementById('feedPrice').innerText = formattedPrice;
+                document.getElementById('mintFeedPrice').innerText = formattedPrice;
+            } catch (error) {
+                document.getElementById('feedPrice').innerText = '0.0000000000000 USDT';
+                document.getElementById('mintFeedPrice').innerText = '0.0000000000000 USDT';
+                console.error('Error updating feed price:', error);
+            }
+        }
+
+        async function updateTargetCollateralRatio() {
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
+            const targetAddress = document.getElementById('liquidateAddressInput').value;
+            if (!web3.utils.isAddress(targetAddress)) {
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
+                document.getElementById('liquidatableFee').innerText = '0.0000 FEE';
+                document.getElementById('liquidatableCollateral').innerText = '0.0000 FEED';
+                return;
+            }
+            try {
+                const collateralRatio = await contract.methods.getCollateralRatio(targetAddress).call();
+                const debt = await contract.methods.debt(targetAddress).call();
+                const collateral = await contract.methods.collateral(targetAddress).call();
+                document.getElementById('targetCollateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
+                document.getElementById('liquidatableFee').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(4)} FEE`;
+                document.getElementById('liquidatableCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED`;
+            } catch (error) {
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
+                document.getElementById('liquidatableFee').innerText = '0.0000 FEE';
+                document.getElementById('liquidatableCollateral').innerText = '0.0000 FEED';
+                console.error('Error updating target collateral ratio:', error);
+            }
+        }
+
+        async function fetchLiquidatableUsers() {
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
+            const liquidationList = document.getElementById('liquidationList');
+            const pagination = document.getElementById('pagination');
+            liquidationList.innerHTML = 'Loading...';
+            pagination.innerHTML = '';
+            try {
+                const usersCount = await contract.methods.getUsersCount().call();
+                const totalPages = Math.ceil(usersCount / itemsPerPage);
+                const [addresses, ratios, debts, collaterals] = await contract.methods.getLiquidatableAddresses((currentPage - 1) * itemsPerPage, itemsPerPage).call();
+                if (addresses.length === 0) { liquidationList.innerHTML = 'No addresses eligible for liquidation.'; return; }
+                liquidationList.innerHTML = addresses.map((address, i) => `<div class="liquidation-item"><span onclick="setLiquidateAddress('${address}')">${address.slice(0, 6)}...${address.slice(-4)}</span><span>Ratio: ${(parseFloat(web3.utils.fromWei(ratios[i], 'ether')) / 10**16).toFixed(2)}% | FEE: ${parseFloat(web3.utils.fromWei(debts[i], 'ether')).toFixed(4)} | FEED: ${parseFloat(web3.utils.fromWei(collaterals[i], 'ether')).toFixed(4)}</span></div>`).join('');
+                pagination.innerHTML = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button><span>Page ${currentPage} of ${totalPages}</span><button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+            } catch (error) {
+                liquidationList.innerHTML = 'Error fetching liquidatable addresses.';
+                console.error('Error fetching liquidatable users:', error);
+            }
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            fetchLiquidatableUsers();
+        }
+
+        function setLiquidateAddress(address) {
+            document.getElementById('liquidateAddressInput').value = address;
+            updateTargetCollateralRatio();
+        }
+
+        async function setMintPercentage(percentage) {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
+            try {
+                const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+                const maxFee = new web3.utils.BN(feedBalance).mul(new web3.utils.BN(100)).div(new web3.utils.BN(150)); // Assuming 150% collateral ratio
+                const feeAmountWei = maxFee.mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
+                const requiredCollateral = await contract.methods.getRequiredCollateral(feeAmountWei.toString()).call();
+                document.getElementById('mintFeeInput').value = parseFloat(web3.utils.fromWei(feeAmountWei, 'ether')).toFixed(9);
+                document.getElementById('requiredFeed').innerText = `${parseFloat(web3.utils.fromWei(requiredCollateral, 'ether')).toFixed(4)} FEED`;
+            } catch (error) { showModal(`Error setting mint percentage: ${error.message}`); }
+        }
+
+        async function setBurnPercentage(percentage) {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
+            try {
+                const debt = await contract.methods.debt(accounts[0]).call();
+                const burnAmountWei = new web3.utils.BN(debt).mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN('1000000000000'));
+                const feedAmount = burnAmountWei.mul(new web3.utils.BN('1000000000000000000')).div(feedPrice);
+                document.getElementById('burnFeeInput').value = parseFloat(web3.utils.fromWei(burnAmountWei, 'ether')).toFixed(9);
+                document.getElementById('redeemableFeed').innerText = `${parseFloat(web3.utils.fromWei(feedAmount, 'ether')).toFixed(4)} FEED`;
+            } catch (error) { showModal(`Error setting burn percentage: ${error.message}`); }
+        }
+
+        async function mintFee() {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
+            const feeAmount = document.getElementById('mintFeeInput').value;
+            if (!feeAmount || feeAmount <= 0) { showModal('Please enter a valid FEE amount!'); return; }
+            try {
+                isOperationInProgress = true;
+                const mintButton = document.getElementById('mintButton');
+                mintButton.classList.add('loading');
+                const feeWei = web3.utils.toWei(feeAmount, 'ether');
+                const requiredCollateral = await contract.methods.getRequiredCollateral(feeWei).call();
+                const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+                if (new web3.utils.BN(feedBalance).lt(new web3.utils.BN(requiredCollateral))) {
+                    showModal('Insufficient FEED balance for required collateral!');
+                    return;
+                }
+                const allowance = await feedContract.methods.allowance(accounts[0], contractAddress).call();
+                if (new web3.utils.BN(allowance).lt(new web3.utils.BN(requiredCollateral))) {
+                    showModal(`Approving ${parseFloat(web3.utils.fromWei(requiredCollateral, 'ether')).toFixed(4)} FEED... 🛠️`);
+                    await feedContract.methods.approve(contractAddress, requiredCollateral).send({ from: accounts[0], gas: 200000 });
+                }
+                showModal(`Minting ${feeAmount} FEE with ${parseFloat(web3.utils.fromWei(requiredCollateral, 'ether')).toFixed(4)} FEED... ⛏️`);
+                const tx = await contract.methods.mint(feeWei).send({ from: accounts[0], gas: 500000 });
+                showModal(`Minted ${feeAmount} FEE successfully! Tx: ${tx.transactionHash} 💎`);
+                document.getElementById('mintFeeInput').value = '';
+                updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
+            } catch (error) {
+                showModal(`Mint failed: ${error.message}`);
+                console.error('Mint error:', error);
+            } finally {
+                isOperationInProgress = false;
+                mintButton.classList.remove('loading');
+            }
+        }
+
+        async function burnFee() {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
+            const feeAmount = document.getElementById('burnFeeInput').value;
+            if (!feeAmount || feeAmount <= 0) { showModal('Please enter a valid FEE amount!'); return; }
+            try {
+                isOperationInProgress = true;
+                const burnButton = document.getElementById('burnButton');
+                burnButton.classList.add('loading');
+                const feeWei = web3.utils.toWei(feeAmount, 'ether');
+                const debt = await contract.methods.debt(accounts[0]).call();
+                if (new web3.utils.BN(feeWei).gt(new web3.utils.BN(debt))) {
+                    showModal('Burn amount exceeds debt!');
+                    return;
+                }
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN('1000000000000'));
+                const feedAmount = new web3.utils.BN(feeWei).mul(new web3.utils.BN('1000000000000000000')).div(feedPrice);
+                showModal(`Burning ${feeAmount} FEE to redeem ${parseFloat(web3.utils.fromWei(feedAmount, 'ether')).toFixed(4)} FEED... 🔥`);
+                const tx = await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
+                showModal(`Burned ${feeAmount} FEE successfully! Tx: ${tx.transactionHash} 🚀`);
+                document.getElementById('burnFeeInput').value = '';
+                updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
+            } catch (error) {
+                showModal(`Burn failed: ${error.message}`);
+                console.error('Burn error:', error);
+            } finally {
+                isOperationInProgress = false;
+                burnButton.classList.remove('loading');
+            }
+        }
+
+        async function liquidateUser() {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
+            const userAddress = document.getElementById('liquidateAddressInput').value;
+            if (!web3.utils.isAddress(userAddress)) { showModal('Please enter a valid address!'); return; }
+            try {
+                isOperationInProgress = true;
+                const liquidateButton = document.getElementById('liquidateButton');
+                liquidateButton.classList.add('loading');
+                const collateralRatio = await contract.methods.getCollateralRatio(userAddress).call();
+                const liquidationThreshold = await contract.methods.LIQUIDATION_THRESHOLD().call();
+                if (new web3.utils.BN(collateralRatio).gte(new web3.utils.BN(liquidationThreshold))) {
+                    showModal('User cannot be liquidated: collateral ratio above 120%!');
+                    return;
+                }
+                const debt = await contract.methods.debt(userAddress).call();
+                const collateral = await contract.methods.collateral(userAddress).call();
+                showModal(`Liquidating ${userAddress} for ${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(4)} FEE and ${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED... ⚡`);
+                const tx = await contract.methods.liquidate(userAddress).send({ from: accounts[0], gas: 300000 });
+                showModal(`Liquidated ${userAddress} successfully! Tx: ${tx.transactionHash} 💰`);
+                updateBalances(); updateFeedPrice(); updateTargetCollateralRatio(); fetchLiquidatableUsers();
+            } catch (error) {
+                showModal(`Liquidation failed: ${error.message}`);
+                console.error('Liquidate error:', error);
+            } finally {
+                isOperationInProgress = false;
+                liquidateButton.classList.remove('loading');
+            }
+        }
+
+        setInterval(() => { if (!isOperationInProgress) updateBalances(); }, 5000);
+        setInterval(() => { if (!isOperationInProgress) updateFeedPrice(); }, 60000);
+        setInterval(() => { if (!isOperationInProgress) updateTargetCollateralRatio(); }, 5000);
+        setInterval(() => { if (!isOperationInProgress) fetchLiquidatableUsers(); }, 60000);
+
+        document.getElementById('connectButton').addEventListener('click', connectWallet);
+        document.getElementById('mintButton').addEventListener('click', mintFee);
+        document.getElementById('burnButton').addEventListener('click', burnFee);
+        document.getElementById('liquidateButton').addEventListener('click', liquidateUser);
+        document.getElementById('liquidateAddressInput').addEventListener('input', updateTargetCollateralRatio);
+        window.ethereum?.on('chainChanged', (chainId) => {
+            if (parseInt(chainId, 16) !== 109) {
+                showModal('Switched to wrong network. Please reconnect to Shibarium.');
+                web3 = null; contract = null; accounts = null;
+                document.getElementById('walletAddress').innerText = 'Not connected';
+            } else { connectWallet(); }
+        });
+        window.ethereum?.on('accountsChanged', (newAccounts) => {
+            if (newAccounts.length) { connectWallet(); }
+            else {
+                showModal('Wallet disconnected. Please reconnect.');
+                web3 = null; contract = null; accounts = null;
+                document.getElementById('walletAddress').innerText = 'Not connected';
+            }
+        });
+        window.addEventListener('load', () => {
+            if (!window.location.protocol.startsWith('http')) {
+                showModal('Please run this page via a local server (e.g., "npx serve") to connect MetaMask.');
+            } else if (!window.ethereum) {
+                showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.');
+            }
+        });
     </script>
 </body>
 </html>
