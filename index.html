@@ -7,50 +7,50 @@
     <link rel="icon" type="image/png" href="images/feed.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {margin:0;padding:0;box-sizing:border-box}
-        body {font-family:'Arial',sans-serif;background:url('images/background.png') no-repeat center center fixed;background-size:cover;color:#fff;line-height:1.6;display:flex;flex-direction:column;align-items:center;min-height:100vh}
-        body::before {content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:inherit;filter:blur(5px);z-index:-1}
-        .header,.container,footer,.modal {position:relative;z-index:1}
-        .header {padding:15px 0;text-align:center;width:100%;background:linear-gradient(180deg,rgba(44,62,80,0.9),rgba(44,62,80,0.5));box-shadow:0 2px 10px rgba(0,0,0,0.3)}
-        .header-top {display:flex;justify-content:space-between;align-items:center;padding:0 20px;height:50px}
-        .header-top .balance {font-size:1.2em;color:#F4A261;font-weight:600}
-        .header-top .actions {display:flex;gap:12px}
-        .action-btn {background:#34495E;color:#fff;border:none;padding:8px 12px;border-radius:12px;font-size:0.9em;cursor:pointer;transition:background 0.3s}
-        .action-btn:hover {background:#F4A261}
-        .action-btn i {font-size:1.1em}
-        .container {width:100%;max-width:420px;padding:20px 10px;flex-grow:1;display:flex;flex-direction:column;gap:20px}
-        .section {background:linear-gradient(145deg,rgba(44,62,80,0.95),rgba(44,62,80,0.85));padding:20px;border-radius:20px;box-shadow:0 4px 15px rgba(0,0,0,0.4);text-align:center;transition:transform 0.2s}
-        .section:hover {transform:scale(1.02)}
-        .section-title {font-size:1.3em;color:#F4A261;margin-bottom:15px;font-weight:600;letter-spacing:1px}
-        .button-group {display:flex;justify-content:center;gap:12px;margin-top:15px inset}
-        button {background:#F4A261;color:#fff;border:none;padding:10px 20px;border-radius:25px;cursor:pointer;font-size:1em;font-weight:500;letter-spacing:0.5px;transition:background 0.3s,transform 0.2s}
-        button:hover {background:#E07A5F;transform:scale(1.05)}
-        button.loading {opacity:0.7;pointer-events:none}
-        .input-group {display:flex;flex-direction:column;gap:10px;margin:15px 0}
-        input {padding:10px;border:none;border-radius:15px;background:#34495E;color:#fff;font-size:1em;text-align:center;font-weight:500}
-        input:focus {outline:none;box-shadow:0 0 5px #F4A261}
-        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {-webkit-appearance:none;margin:0}
-        input[type="number"] {-moz-appearance:textfield}
-        .percentage-buttons {display:flex;justify-content:center;gap:8px;margin:15px 0}
-        .percentage-btn {background:#F4A261;color:#fff;border:none;padding:8px 12px;border-radius:15px;font-size:0.9em;cursor:pointer;font-weight:500;transition:background 0.3s,transform 0.2s}
-        .percentage-btn:hover {background:#E07A5F;transform:scale(1.05)}
-        .info-panel {background:#34495E;padding:12px;border-radius:15px;margin-top:15px;font-size:0.9em;color:#fff;font-weight:400;letter-spacing:0.5px;display:flex;flex-direction:column;gap:5px}
-        .info-panel span {color:#F4A261;font-weight:500}
-        .liquidation-list {max-height:200px;overflow-y:auto;background:#34495E;padding:12px;border-radius:15px;margin-top:15px;font-size:0.9em;color:#fff}
-        .liquidation-item {display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #F4A261}
-        .liquidation-item:last-child {border-bottom:none}
-        .liquidation-item span {color:#F4A261;cursor:pointer}
-        .liquidation-item span:hover {color:#E07A5F}
-        .pagination {display:flex;justify-content:center;gap:12px;margin-top:15px}
-        .pagination button {background:#F4A261;color:#fff;border:none;padding:8px 12px;border-radius:15px;font-size:0.9em;cursor:pointer}
-        .pagination button:disabled {background:#34495E;cursor:not-allowed}
-        .pagination span {font-size:0.9em;color:#F4A261}
-        .modal {display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:1000}
-        .modal-content {background:#2C3E50;padding:25px;border-radius:20px;text-align:center;color:#fff;max-width:320px;box-shadow:0 4px 15px rgba(0,0,0,0.5)}
-        .modal-content p {margin-bottom:20px;font-size:1.1em;font-weight:500}
-        .modal-content button {background:#F4A261;padding:10px 20px;border-radius:25px;font-size:1em}
-        footer {background:linear-gradient(180deg,rgba(30,42,68,0.5),rgba(30,42,68,0.9));text-align:center;padding:15px;width:100%;color:#A8B5D4;font-size:0.9em;margin-top:25px}
-        @media (max-width:480px) {button {padding:8px 16px;font-size:0.9em}input {font-size:0.9em}.section-title {font-size:1.2em}}
+        * { margin: 0; padding: 0; box-sizing: border-box }
+        body { font-family: 'Arial', sans-serif; background: url('images/background.png') no-repeat center center fixed; background-size: cover; color: #fff; line-height: 1.6; display: flex; flex-direction: column; align-items: center; min-height: 100vh }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: inherit; filter: blur(5px); z-index: -1 }
+        .header, .container, footer, .modal { position: relative; z-index: 1 }
+        .header { padding: 15px 0; text-align: center; width: 100%; background: linear-gradient(180deg, rgba(44,62,80,0.9), rgba(44,62,80,0.5)); box-shadow: 0 2px 10px rgba(0,0,0,0.3) }
+        .header-top { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 50px }
+        .header-top .balance { font-size: 1.2em; color: #F4A261; font-weight: 600 }
+        .header-top .actions { display: flex; gap: 12px }
+        .action-btn { background: #34495E; color: #fff; border: none; padding: 8px 12px; border-radius: 12px; font-size: 0.9em; cursor: pointer; transition: background 0.3s }
+        .action-btn:hover { background: #F4A261 }
+        .action-btn i { font-size: 1.1em }
+        .container { width: 100%; max-width: 420px; padding: 20px 10px; flex-grow: 1; display: flex; flex-direction: column; gap: 20px }
+        .section { background: linear-gradient(145deg, rgba(44,62,80,0.95), rgba(44,62,80,0.85)); padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-align: center; transition: transform 0.2s }
+        .section:hover { transform: scale(1.02) }
+        .section-title { font-size: 1.3em; color: #F4A261; margin-bottom: 15px; font-weight: 600; letter-spacing: 1px }
+        .button-group { display: flex; justify-content: center; gap: 12px; margin-top: 15px }
+        button { background: #F4A261; color: #fff; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-size: 1em; font-weight: 500; letter-spacing: 0.5px; transition: background 0.3s, transform 0.2s }
+        button:hover { background: #E07A5F; transform: scale(1.05) }
+        button.loading { opacity: 0.7; pointer-events: none }
+        .input-group { display: flex; flex-direction: column; gap: 10px; margin: 15px 0 }
+        input { padding: 10px; border: none; border-radius: 15px; background: #34495E; color: #fff; font-size: 1em; text-align: center; font-weight: 500 }
+        input:focus { outline: none; box-shadow: 0 0 5px #F4A261 }
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0 }
+        input[type="number"] { -moz-appearance: textfield }
+        .percentage-buttons { display: flex; justify-content: center; gap: 8px; margin: 15px 0 }
+        .percentage-btn { background: #F4A261; color: #fff; border: none; padding: 8px 12px; border-radius: 15px; font-size: 0.9em; cursor: pointer; font-weight: 500; transition: background 0.3s, transform 0.2s }
+        .percentage-btn:hover { background: #E07A5F; transform: scale(1.05) }
+        .info-panel { background: #34495E; padding: 12px; border-radius: 15px; margin-top: 15px; font-size: 0.9em; color: #fff; font-weight: 400; letter-spacing: 0.5px; display: flex; flex-direction: column; gap: 5px }
+        .info-panel span { color: #F4A261; font-weight: 500 }
+        .liquidation-list { max-height: 200px; overflow-y: auto; background: #34495E; padding: 12px; border-radius: 15px; margin-top: 15px; font-size: 0.9em; color: #fff }
+        .liquidation-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #F4A261 }
+        .liquidation-item:last-child { border-bottom: none }
+        .liquidation-item span { color: #F4A261; cursor: pointer }
+        .liquidation-item span:hover { color: #E07A5F }
+        .pagination { display: flex; justify-content: center; gap: 12px; margin-top: 15px }
+        .pagination button { background: #F4A261; color: #fff; border: none; padding: 8px 12px; border-radius: 15px; font-size: 0.9em; cursor: pointer }
+        .pagination button:disabled { background: #34495E; cursor: not-allowed }
+        .pagination span { font-size: 0.9em; color: #F4A261 }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000 }
+        .modal-content { background: #2C3E50; padding: 25px; border-radius: 20px; text-align: center; color: #fff; max-width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.5) }
+        .modal-content p { margin-bottom: 20px; font-size: 1.1em; font-weight: 500 }
+        .modal-content button { background: #F4A261; padding: 10px 20px; border-radius: 25px; font-size: 1em }
+        footer { background: linear-gradient(180deg, rgba(30,42,68,0.5), rgba(30,42,68,0.9)); text-align: center; padding: 15px; width: 100%; color: #A8B5D4; font-size: 0.9em; margin-top: 25px }
+        @media (max-width: 480px) { button { padding: 8px 16px; font-size: 0.9em } input { font-size: 0.9em } .section-title { font-size: 1.2em } }
     </style>
 </head>
 <body>
@@ -99,7 +99,7 @@
                 <button id="burnButton">Burn</button>
             </div>
             <div class="input-group">
-                <input type="number" id="burnFeeInput" placeholder="FEE Amount">
+                <input type="number" id="burnFeeInput" placeholder="FEE Amount" step="any" min="0">
             </div>
             <div class="percentage-buttons">
                 <button class="percentage-btn" onclick="setBurnPercentage(25)">25%</button>
@@ -143,7 +143,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, accounts, contract, feedContract;
-        const contractAddress = "0x9087c0CDe351CE117770F863B1C973D368f69084";
+        const contractAddress = "0x5F3d2D7982D1532d937a629FFd1AF8c9664f9581"; // Updated contract address
         const FEED_ADDRESS = "0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0";
         const contractABI = [
             {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
@@ -165,6 +165,7 @@
             {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"debt","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"getFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getAmplifiedFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getCollateralRatio","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[],"name":"lastValidPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
@@ -186,37 +187,37 @@
             {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
-        const shibariumMainnet = {chainId:109,chainName:'Shibarium',nativeCurrency:{name:'BONE',symbol:'BONE',decimals:18},rpcUrls:['https://www.shibrpc.com'],blockExplorerUrls:['https://shibariumscan.io']};
+        const shibariumMainnet = {chainId: 109, chainName: 'Shibarium', nativeCurrency: {name: 'BONE', symbol: 'BONE', decimals: 18}, rpcUrls: ['https://www.shibrpc.com'], blockExplorerUrls: ['https://shibariumscan.io']};
 
         let currentPage = 1;
         const itemsPerPage = 5;
 
-        function showModal(message) {document.getElementById('modalMessage').innerHTML=message;document.getElementById('modal').style.display='flex'}
-        function closeModal() {document.getElementById('modal').style.display='none'}
+        function showModal(message) { document.getElementById('modalMessage').innerHTML = message; document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
         async function connectWallet() {
             const connectButton = document.getElementById('connectButton');
             try {
-                if (!window.ethereum) {showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.');return}
+                if (!window.ethereum) { showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.'); return; }
                 connectButton.classList.add('loading');
                 web3 = new Web3(window.ethereum);
-                await window.ethereum.request({method:'eth_requestAccounts'});
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
                 accounts = await web3.eth.getAccounts();
-                if (!accounts.length) {showModal('Please unlock your wallet or connect it.');return}
+                if (!accounts.length) { showModal('Please unlock your wallet or connect it.'); return; }
                 const chainId = await web3.eth.getChainId();
                 if (chainId !== 109) {
-                    try {await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:web3.utils.numberToHex(109)}]})}
-                    catch(switchError) {if (switchError.code===4902) {await window.ethereum.request({method:'wallet_addEthereumChain',params:[shibariumMainnet]})} else {showModal('Failed to switch network. Please add Shibarium manually.');return}}
+                    try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: web3.utils.numberToHex(109) }] }); }
+                    catch (switchError) { if (switchError.code === 4902) { await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibariumMainnet] }); } else { showModal('Failed to switch network. Please add Shibarium manually.'); return; } }
                 }
-                document.getElementById('walletAddress').innerText=`${accounts[0].slice(0,6)}...${accounts[0].slice(-4)}`;
+                document.getElementById('walletAddress').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
                 contract = new web3.eth.Contract(contractABI, contractAddress);
                 feedContract = new web3.eth.Contract(FEED_ABI, FEED_ADDRESS);
                 const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
-                document.getElementById('feeBalance').innerText=`${web3.utils.fromWei(feeBalance,'ether')} FEE`;
+                document.getElementById('feeBalance').innerText = `${web3.utils.fromWei(feeBalance, 'ether')} FEE`;
                 showModal('Connected to Shibarium successfully! 🎉');
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
-            } catch (error) {showModal(`Connection failed: ${error.message}`)}
-            finally {connectButton.classList.remove('loading')}
+            } catch (error) { showModal(`Connection failed: ${error.message}`); }
+            finally { connectButton.classList.remove('loading'); }
         }
 
         async function updateBalances() {
@@ -227,62 +228,66 @@
                 const debt = await contract.methods.debt(accounts[0]).call();
                 const collateral = await contract.methods.collateral(accounts[0]).call();
                 const collateralRatio = await contract.methods.getCollateralRatio(accounts[0]).call();
-                const feedPrice = await contract.methods.getFeedPrice().call();
-                document.getElementById('feeBalance').innerText=`${web3.utils.fromWei(feeBalance,'ether')} FEE`;
-                document.getElementById('feedBalance').innerText=web3.utils.fromWei(feedBalance,'ether');
-                document.getElementById('userDebt').innerText=`${web3.utils.fromWei(debt,'ether')} FEE`;
-                document.getElementById('userCollateral').innerText=web3.utils.fromWei(collateral,'ether');
-                document.getElementById('collateralRatio').innerText=debt==0?'N/A':`${(parseFloat(web3.utils.fromWei(collateralRatio,'ether'))/10**16).toFixed(2)}`;
-                const maxMintableFee = feedBalance>0?(feedBalance*feedPrice*100)/(150*10**16):0;
-                document.getElementById('maxMintableFee').innerText=`${web3.utils.fromWei(maxMintableFee.toString(),'ether')} FEE`;
-                const redeemableFeed = debt>0?(parseFloat(web3.utils.fromWei(debt,'ether'))*parseFloat(web3.utils.fromWei(feedPrice,'ether'))/10**18):0;
-                document.getElementById('redeemableFeed').innerText=`${web3.utils.fromWei(redeemableFeed.toString(),'ether')} FEED`;
-            } catch (error) {console.error('Error updating balances:', error)}
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                document.getElementById('feeBalance').innerText = `${web3.utils.fromWei(feeBalance, 'ether')} FEE`;
+                document.getElementById('feedBalance').innerText = web3.utils.fromWei(feedBalance, 'ether');
+                document.getElementById('userDebt').innerText = `${web3.utils.fromWei(debt, 'ether')} FEE`;
+                document.getElementById('userCollateral').innerText = web3.utils.fromWei(collateral, 'ether');
+                document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
+                const maxMintableFee = feedBalance > 0 ? (feedBalance * feedPrice * 100) / (150 * 10**16) : 0;
+                document.getElementById('maxMintableFee').innerText = `${web3.utils.fromWei(maxMintableFee.toString(), 'ether')} FEE`;
+                const redeemableFeed = debt > 0 ? (parseFloat(web3.utils.fromWei(debt, 'ether')) * parseFloat(web3.utils.fromWei(feedPrice, 'ether')) * 10**18) / 10**18 : 0; // Adjusted for precision
+                document.getElementById('redeemableFeed').innerText = `${web3.utils.fromWei(redeemableFeed.toString(), 'ether')} FEED`;
+            } catch (error) { console.error('Error updating balances:', error); }
         }
 
         async function updateFeedPrice() {
             if (!web3 || !contract || !accounts) {
-                document.getElementById('feedPrice').innerText='0.0000000000000 USDT';
-                document.getElementById('mintFeedPrice').innerText='0.0000000000000 USDT';
+                document.getElementById('feedPrice').innerText = '0.0000000000000 USDT';
+                document.getElementById('mintFeedPrice').innerText = '0.0000000000000 USDT';
                 return;
             }
             try {
-                const feedPrice = await contract.methods.getFeedPrice().call();
-                const formattedPrice = `${parseFloat(web3.utils.fromWei(feedPrice,'ether')).toFixed(13)} USDT`;
-                document.getElementById('feedPrice').innerText=formattedPrice;
-                document.getElementById('mintFeedPrice').innerText=formattedPrice;
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                const formattedPrice = `${(parseFloat(web3.utils.fromWei(feedPrice.toString(), 'ether'))).toFixed(13)} USDT`;
+                document.getElementById('feedPrice').innerText = formattedPrice;
+                document.getElementById('mintFeedPrice').innerText = formattedPrice;
             } catch (error) {
-                document.getElementById('feedPrice').innerText='0.0000000000000 USDT';
-                document.getElementById('mintFeedPrice').innerText='0.0000000000000 USDT';
+                document.getElementById('feedPrice').innerText = '0.0000000000000 USDT';
+                document.getElementById('mintFeedPrice').innerText = '0.0000000000000 USDT';
                 console.error('Error updating feed price:', error);
             }
         }
 
         async function updateTargetCollateralRatio() {
             if (!web3 || !contract || !accounts) {
-                document.getElementById('targetCollateralRatio').innerText='N/A';
-                document.getElementById('liquidatableFee').innerText='0.000000000000000000 FEE';
-                document.getElementById('liquidatableCollateral').innerText='0.000000000000000000 FEED';
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
+                document.getElementById('liquidatableFee').innerText = '0.000000000000000000 FEE';
+                document.getElementById('liquidatableCollateral').innerText = '0.000000000000000000 FEED';
                 return;
             }
             const targetAddress = document.getElementById('liquidateAddressInput').value;
             if (!web3.utils.isAddress(targetAddress)) {
-                document.getElementById('targetCollateralRatio').innerText='N/A';
-                document.getElementById('liquidatableFee').innerText='0.000000000000000000 FEE';
-                document.getElementById('liquidatableCollateral').innerText='0.000000000000000000 FEED';
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
+                document.getElementById('liquidatableFee').innerText = '0.000000000000000000 FEE';
+                document.getElementById('liquidatableCollateral').innerText = '0.000000000000000000 FEED';
                 return;
             }
             try {
                 const collateralRatio = await contract.methods.getCollateralRatio(targetAddress).call();
                 const debt = await contract.methods.debt(targetAddress).call();
                 const collateral = await contract.methods.collateral(targetAddress).call();
-                document.getElementById('targetCollateralRatio').innerText=debt==0?'N/A':`${(parseFloat(web3.utils.fromWei(collateralRatio,'ether'))/10**16).toFixed(2)}`;
-                document.getElementById('liquidatableFee').innerText=`${web3.utils.fromWei(debt,'ether')} FEE`;
-                document.getElementById('liquidatableCollateral').innerText=web3.utils.fromWei(collateral,'ether');
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                document.getElementById('targetCollateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
+                document.getElementById('liquidatableFee').innerText = `${web3.utils.fromWei(debt, 'ether')} FEE`;
+                document.getElementById('liquidatableCollateral').innerText = web3.utils.fromWei(collateral, 'ether');
             } catch (error) {
-                document.getElementById('targetCollateralRatio').innerText='N/A';
-                document.getElementById('liquidatableFee').innerText='0.000000000000000000 FEE';
-                document.getElementById('liquidatableCollateral').innerText='0.000000000000000000 FEED';
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
+                document.getElementById('liquidatableFee').innerText = '0.000000000000000000 FEE';
+                document.getElementById('liquidatableCollateral').innerText = '0.000000000000000000 FEED';
                 console.error('Error updating target collateral ratio:', error);
             }
         }
@@ -296,12 +301,12 @@
             try {
                 const usersCount = await contract.methods.getUsersCount().call();
                 const totalPages = Math.ceil(usersCount / itemsPerPage);
-                const [addresses, ratios, debts, collaterals] = await contract.methods.getLiquidatableAddresses((currentPage-1)*itemsPerPage, itemsPerPage).call();
-                if (addresses.length === 0) {liquidationList.innerHTML='No addresses eligible for liquidation.'; return}
-                liquidationList.innerHTML=addresses.map((address,i)=>`<div class="liquidation-item"><span onclick="setLiquidateAddress('${address}')">${address.slice(0,6)}...${address.slice(-4)}</span><span>Ratio: ${(parseFloat(web3.utils.fromWei(ratios[i],'ether'))/10**16).toFixed(2)}% | FEE: ${web3.utils.fromWei(debts[i],'ether')} | FEED: ${web3.utils.fromWei(collaterals[i],'ether')}</span></div>`).join('');
-                pagination.innerHTML=`<button onclick="changePage(${currentPage-1})" ${currentPage===1?'disabled':''}>Previous</button><span>Page ${currentPage} of ${totalPages}</span><button onclick="changePage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Next</button>`;
+                const [addresses, ratios, debts, collaterals] = await contract.methods.getLiquidatableAddresses((currentPage - 1) * itemsPerPage, itemsPerPage).call();
+                if (addresses.length === 0) { liquidationList.innerHTML = 'No addresses eligible for liquidation.'; return; }
+                liquidationList.innerHTML = addresses.map((address, i) => `<div class="liquidation-item"><span onclick="setLiquidateAddress('${address}')">${address.slice(0, 6)}...${address.slice(-4)}</span><span>Ratio: ${(parseFloat(web3.utils.fromWei(ratios[i], 'ether')) / 10**16).toFixed(2)}% | FEE: ${web3.utils.fromWei(debts[i], 'ether')} | FEED: ${web3.utils.fromWei(collaterals[i], 'ether')}</span></div>`).join('');
+                pagination.innerHTML = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button><span>Page ${currentPage} of ${totalPages}</span><button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
             } catch (error) {
-                liquidationList.innerHTML='Error fetching liquidatable addresses.';
+                liquidationList.innerHTML = 'Error fetching liquidatable addresses.';
                 console.error('Error fetching liquidatable users:', error);
             }
         }
@@ -313,83 +318,85 @@
         }
 
         function setLiquidateAddress(address) {
-            document.getElementById('liquidateAddressInput').value=address;
+            document.getElementById('liquidateAddressInput').value = address;
             updateTargetCollateralRatio();
         }
 
         async function setMintPercentage(percentage) {
-            if (!web3 || !contract || !accounts) {showModal('Please connect your wallet first! 🔧'); return}
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             try {
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
-                const feedPrice = await contract.methods.getFeedPrice().call();
-                const feedBalanceEther = parseFloat(web3.utils.fromWei(feedBalance,'ether'));
-                const feedPriceEther = parseFloat(web3.utils.fromWei(feedPrice,'ether'));
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                const feedBalanceEther = parseFloat(web3.utils.fromWei(feedBalance, 'ether'));
                 const feedAmount = Math.floor(feedBalanceEther * (percentage / 100));
-                const maxMintableFee = (web3.utils.toWei(feedAmount.toString(), 'ether') * 100 * 10**18) / (feedPrice * 150 * 10**16);
-                document.getElementById('mintFeedInput').value=feedAmount;
-                document.getElementById('maxMintableFee').innerText=`${web3.utils.fromWei(maxMintableFee.toString(),'ether')} FEE`;
-            } catch (error) {showModal(`Error setting mint percentage: ${error.message}`)}
+                const maxMintableFee = feedAmount > 0 ? (web3.utils.toWei(feedAmount.toString(), 'ether') * 100 * 10**18) / (feedPrice * 150 * 10**16) : 0;
+                document.getElementById('mintFeedInput').value = feedAmount;
+                document.getElementById('maxMintableFee').innerText = `${web3.utils.fromWei(maxMintableFee.toString(), 'ether')} FEE`;
+            } catch (error) { showModal(`Error setting mint percentage: ${error.message}`); }
         }
 
         async function setBurnPercentage(percentage) {
-            if (!web3 || !contract || !accounts) {showModal('Please connect your wallet first! 🔧'); return}
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             try {
                 const debt = await contract.methods.debt(accounts[0]).call();
-                const feedPrice = await contract.methods.getFeedPrice().call();
-                const debtEther = parseFloat(web3.utils.fromWei(debt,'ether'));
-                const feedPriceEther = parseFloat(web3.utils.fromWei(feedPrice,'ether'));
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
+                const debtEther = parseFloat(web3.utils.fromWei(debt, 'ether'));
                 const burnAmount = debtEther * (percentage / 100);
-                const redeemableFeed = (web3.utils.toWei(burnAmount.toString(), 'ether') * 10**18) / feedPrice;
-                document.getElementById('burnFeeInput').value=burnAmount;
-                document.getElementById('redeemableFeed').innerText=`${web3.utils.fromWei(redeemableFeed.toString(),'ether')} FEED`;
-            } catch (error) {showModal(`Error setting burn percentage: ${error.message}`)}
+                const redeemableFeed = burnAmount > 0 ? (web3.utils.toWei(burnAmount.toString(), 'ether') * 10**18) / feedPrice : 0;
+                document.getElementById('burnFeeInput').value = burnAmount.toFixed(18);
+                document.getElementById('redeemableFeed').innerText = `${web3.utils.fromWei(redeemableFeed.toString(), 'ether')} FEED`;
+            } catch (error) { showModal(`Error setting burn percentage: ${error.message}`); }
         }
 
         async function mintFee() {
-            if (!web3 || !contract || !accounts) {showModal('Please connect your wallet first! 🔧'); return}
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             const feedAmount = document.getElementById('mintFeedInput').value;
-            if (!feedAmount || !Number.isInteger(Number(feedAmount)) || feedAmount <= 0) {showModal('Please enter a valid integer FEED amount!'); return}
+            if (!feedAmount || !Number.isInteger(Number(feedAmount)) || feedAmount <= 0) { showModal('Please enter a valid integer FEED amount!'); return; }
             try {
                 const feedWei = web3.utils.toWei(feedAmount.toString(), 'ether');
-                const feedPrice = await contract.methods.getFeedPrice().call();
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
                 const feeAmount = (feedWei * 100 * 10**18) / (feedPrice * 150 * 10**16);
-                await feedContract.methods.approve(contractAddress, feedWei).send({from:accounts[0]});
-                showModal(`Minting ${web3.utils.fromWei(feeAmount.toString(),'ether')} FEE with ${feedAmount} FEED... ⛏️`);
-                await contract.methods.mint(feeAmount.toString()).send({from:accounts[0]});
-                showModal(`Minted ${web3.utils.fromWei(feeAmount.toString(),'ether')} FEE successfully! 💎`);
+                await feedContract.methods.approve(contractAddress, feedWei).send({ from: accounts[0] });
+                showModal(`Minting ${web3.utils.fromWei(feeAmount.toString(), 'ether')} FEE with ${feedAmount} FEED... ⛏️`);
+                await contract.methods.mint(feeAmount.toString()).send({ from: accounts[0] });
+                showModal(`Minted ${web3.utils.fromWei(feeAmount.toString(), 'ether')} FEE successfully! 💎`);
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
-            } catch (error) {showModal(`Mint failed: ${error.message}`)}
+            } catch (error) { showModal(`Mint failed: ${error.message}`); }
         }
 
         async function burnFee() {
-            if (!web3 || !contract || !accounts) {showModal('Please connect your wallet first! 🔧'); return}
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             const feeAmount = document.getElementById('burnFeeInput').value;
-            if (!feeAmount || feeAmount <= 0) {showModal('Please enter a valid FEE amount!'); return}
+            if (!feeAmount || feeAmount <= 0) { showModal('Please enter a valid FEE amount!'); return; }
             try {
                 const feeWei = web3.utils.toWei(feeAmount.toString(), 'ether');
-                const feedPrice = await contract.methods.getFeedPrice().call();
+                const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
+                const feedPrice = amplifiedFeedPrice / 10**12; // Adjust for amplification factor
                 const feedAmount = (feeWei * 10**18) / feedPrice;
-                showModal(`Burning ${feeAmount} FEE to redeem ${web3.utils.fromWei(feedAmount.toString(),'ether')} FEED... 🔥`);
-                await contract.methods.burn(feeWei).send({from:accounts[0]});
-                showModal(`Burned ${feeAmount} FEE and reclaimed ${web3.utils.fromWei(feedAmount.toString(),'ether')} FEED! 🚀`);
+                showModal(`Burning ${feeAmount} FEE to redeem ${web3.utils.fromWei(feedAmount.toString(), 'ether')} FEED... 🔥`);
+                await contract.methods.burn(feeWei).send({ from: accounts[0] });
+                showModal(`Burned ${feeAmount} FEE and reclaimed ${web3.utils.fromWei(feedAmount.toString(), 'ether')} FEED! 🚀`);
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
-            } catch (error) {showModal(`Burn failed: ${error.message}`)}
+            } catch (error) { showModal(`Burn failed: ${error.message}`); }
         }
 
         async function liquidateUser() {
-            if (!web3 || !contract || !accounts) {showModal('Please connect your wallet first! 🔧'); return}
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             const userAddress = document.getElementById('liquidateAddressInput').value;
-            if (!web3.utils.isAddress(userAddress)) {showModal('Please enter a valid address!'); return}
+            if (!web3.utils.isAddress(userAddress)) { showModal('Please enter a valid address!'); return; }
             try {
                 const collateralRatio = await contract.methods.getCollateralRatio(userAddress).call();
-                if (BigInt(collateralRatio) >= BigInt(web3.utils.toWei('120','ether')) * BigInt(10**16) / BigInt(100)) {showModal('User cannot be liquidated: collateral ratio above 120%!'); return}
+                if (BigInt(collateralRatio) >= BigInt(web3.utils.toWei('120', 'ether')) * BigInt(10**16) / BigInt(100)) { showModal('User cannot be liquidated: collateral ratio above 120%!'); return; }
                 const debt = await contract.methods.debt(userAddress).call();
                 const collateral = await contract.methods.collateral(userAddress).call();
-                showModal(`Liquidating ${userAddress} for ${web3.utils.fromWei(debt,'ether')} FEE and ${web3.utils.fromWei(collateral,'ether')} FEED... ⚡`);
-                await contract.methods.liquidate(userAddress).send({from:accounts[0]});
-                showModal(`Liquidated ${userAddress} successfully! Claimed ${web3.utils.fromWei(collateral,'ether')} FEED! 💰`);
+                showModal(`Liquidating ${userAddress} for ${web3.utils.fromWei(debt, 'ether')} FEE and ${web3.utils.fromWei(collateral, 'ether')} FEED... ⚡`);
+                await contract.methods.liquidate(userAddress).send({ from: accounts[0] });
+                showModal(`Liquidated ${userAddress} successfully! Claimed ${web3.utils.fromWei(collateral, 'ether')} FEED! 💰`);
                 updateBalances(); updateFeedPrice(); updateTargetCollateralRatio(); fetchLiquidatableUsers();
-            } catch (error) {showModal(`Liquidation failed: ${error.message}`)}
+            } catch (error) { showModal(`Liquidation failed: ${error.message}`); }
         }
 
         setInterval(updateBalances, 5000);
@@ -401,9 +408,9 @@
         document.getElementById('burnButton').addEventListener('click', burnFee);
         document.getElementById('liquidateButton').addEventListener('click', liquidateUser);
         document.getElementById('liquidateAddressInput').addEventListener('input', updateTargetCollateralRatio);
-        window.ethereum?.on('chainChanged', (chainId) => {if (parseInt(chainId,16)!==109) {showModal('Switched to wrong network. Please reconnect to Shibarium.'); web3=null; contract=null; accounts=null; document.getElementById('walletAddress').innerText='Not connected'} else {connectWallet()}});
-        window.ethereum?.on('accountsChanged', (newAccounts) => {if (newAccounts.length) {connectWallet()} else {showModal('Wallet disconnected. Please reconnect.'); web3=null; contract=null; accounts=null; document.getElementById('walletAddress').innerText='Not connected'}});
-        window.addEventListener('load', () => {if (!window.location.protocol.startsWith('http')) {showModal('Please run this page via a local server (e.g., "npx serve") to connect MetaMask.')} else if (!window.ethereum) {showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.')}});
+        window.ethereum?.on('chainChanged', (chainId) => { if (parseInt(chainId, 16) !== 109) { showModal('Switched to wrong network. Please reconnect to Shibarium.'); web3 = null; contract = null; accounts = null; document.getElementById('walletAddress').innerText = 'Not connected'; } else { connectWallet(); } });
+        window.ethereum?.on('accountsChanged', (newAccounts) => { if (newAccounts.length) { connectWallet(); } else { showModal('Wallet disconnected. Please reconnect.'); web3 = null; contract = null; accounts = null; document.getElementById('walletAddress').innerText = 'Not connected'; } });
+        window.addEventListener('load', () => { if (!window.location.protocol.startsWith('http')) { showModal('Please run this page via a local server (e.g., "npx serve") to connect MetaMask.'); } else if (!window.ethereum) { showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.'); } });
     </script>
 </body>
 </html>
