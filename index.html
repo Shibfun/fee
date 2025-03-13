@@ -94,6 +94,27 @@
             </div>
         </div>
         <div class="section">
+            <div class="section-title">Add Collateral</div>
+            <div class="button-group">
+                <button id="addCollateralButton">Add</button>
+            </div>
+            <div class="input-group">
+                <input type="number" id="addCollateralInput" placeholder="FEED Amount" step="any" min="0" oninput="updateCollateralInput()">
+            </div>
+            <div class="percentage-buttons">
+                <button class="percentage-btn" onclick="setCollateralPercentage(25)">25%</button>
+                <button class="percentage-btn" onclick="setCollateralPercentage(50)">50%</button>
+                <button class="percentage-btn" onclick="setCollateralPercentage(75)">75%</button>
+                <button class="percentage-btn" onclick="setCollateralPercentage(100)">100%</button>
+            </div>
+            <div class="info-panel">
+                <div>FEED Balance: <span id="feedBalanceCollateral">0.000000000000000000 FEED</span></div>
+                <div>Debt: <span id="userDebtCollateral">0.000000000000000000 FEE</span></div>
+                <div>Collateral: <span id="userCollateralCollateral">0.000000000000000000 FEED</span></div>
+                <div>New Ratio: <span id="newCollateralRatio">N/A</span>%</div>
+            </div>
+        </div>
+        <div class="section">
             <div class="section-title">Burn FEE</div>
             <div class="button-group">
                 <button id="burnButton">Burn</button>
@@ -240,14 +261,17 @@
                 const debt = await contract.methods.debt(accounts[0]).call();
                 const collateral = await contract.methods.collateral(accounts[0]).call();
                 const collateralRatio = await contract.methods.getCollateralRatio(accounts[0]).call();
-
                 document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
                 document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(18)} FEED`;
+                document.getElementById('feedBalanceCollateral').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(18)} FEED`;
                 document.getElementById('userDebt').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(18)} FEE`;
+                document.getElementById('userDebtCollateral').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(18)} FEE`;
                 document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(18)} FEED`;
+                document.getElementById('userCollateralCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(18)} FEED`;
                 document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
                 updateEstimatedFee();
                 updateRedeemableFeed();
+                updateCollateralInput();
             } catch (error) { console.error('Error updating balances:', error); }
         }
 
@@ -282,6 +306,21 @@
                 const feedAmountWei = feeAmountWei.mul(new web3.utils.BN('2')).mul(new web3.utils.BN('10').pow(new web3.utils.BN('18'))).div(feedPrice);
                 document.getElementById('redeemableFeed').innerText = `${parseFloat(web3.utils.fromWei(feedAmountWei.toString(), 'ether')).toFixed(18)} FEED`;
             } catch (error) { console.error('Error updating redeemable feed:', error); }
+        }
+
+        async function updateCollateralInput() {
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
+            try {
+                const addCollateralInput = document.getElementById('addCollateralInput').value || '0';
+                const feedAmountWei = new web3.utils.BN(web3.utils.toWei(addCollateralInput, 'ether'));
+                const currentCollateral = await contract.methods.collateral(accounts[0]).call();
+                const debt = await contract.methods.debt(accounts[0]).call();
+                const feedPrice = await contract.methods.getFeedPrice().call();
+                const newCollateral = new web3.utils.BN(currentCollateral).add(feedAmountWei);
+                const collateralValue = newCollateral.mul(new web3.utils.BN(feedPrice)).div(new web3.utils.BN('10').pow(new web3.utils.BN('18')));
+                const newRatio = debt == 0 ? 'N/A' : (collateralValue.mul(new web3.utils.BN('100')).mul(new web3.utils.BN('10').pow(new web3.utils.BN('18'))).div(new web3.utils.BN(debt))).div(new web3.utils.BN('10').pow(new web3.utils.BN('16')));
+                document.getElementById('newCollateralRatio').innerText = debt == 0 ? 'N/A' : `${parseFloat(newRatio).toFixed(2)}%`;
+            } catch (error) { console.error('Error updating collateral input:', error); }
         }
 
         async function updateTargetCollateralRatio() {
@@ -349,6 +388,34 @@
             } catch (error) { console.error('Error setting burn percentage:', error); }
         }
 
+        async function setCollateralPercentage(percentage) {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
+            try {
+                const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+                const feedAmountWei = new web3.utils.BN(feedBalance).mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
+                document.getElementById('addCollateralInput').value = parseFloat(web3.utils.fromWei(feedAmountWei.toString(), 'ether')).toFixed(18);
+                updateCollateralInput();
+            } catch (error) { console.error('Error setting collateral percentage:', error); }
+        }
+
+        async function checkAndApproveFeed(amountWei) {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return false; }
+            try {
+                const allowance = await feedContract.methods.allowance(accounts[0], contractAddress).call();
+                if (new web3.utils.BN(allowance).lt(amountWei)) {
+                    const maxAmount = web3.utils.toWei('1000000000000', 'ether');
+                    showModal('Authorizing FEED... ⏳');
+                    await feedContract.methods.approve(contractAddress, maxAmount).send({ from: accounts[0], gas: 100000 });
+                    showModal('Authorization successful! Please confirm the mint transaction. ✅');
+                    return true;
+                }
+                return true;
+            } catch (error) {
+                showModal(`Authorization failed: ${error.message}`);
+                return false;
+            }
+        }
+
         async function mintFee() {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             const feedAmount = document.getElementById('mintFeedInput').value;
@@ -358,13 +425,35 @@
                 const mintButton = document.getElementById('mintButton');
                 mintButton.classList.add('loading');
                 const feedWei = web3.utils.toWei(feedAmount, 'ether');
+                const isApproved = await checkAndApproveFeed(feedWei);
+                if (!isApproved) throw new Error('Authorization failed');
                 showModal(`Minting with ${feedAmount} FEED... ⛏️`);
-                const tx = await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
-                showModal(`Mint successful! Tx: ${tx.transactionHash} 💎`);
+                await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
+                showModal('Transaction successful! 💎');
                 document.getElementById('mintFeedInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Mint failed: ${error.message}`); }
-            finally { isOperationInProgress = false; mintButton.classList.remove('loading'); }
+            finally { isOperationInProgress = false; document.getElementById('mintButton').classList.remove('loading'); }
+        }
+
+        async function addCollateral() {
+            if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
+            const feedAmount = document.getElementById('addCollateralInput').value;
+            if (!feedAmount || feedAmount <= 0) { showModal('Please enter a valid FEED amount!'); return; }
+            try {
+                isOperationInProgress = true;
+                const addCollateralButton = document.getElementById('addCollateralButton');
+                addCollateralButton.classList.add('loading');
+                const feedWei = web3.utils.toWei(feedAmount, 'ether');
+                const isApproved = await checkAndApproveFeed(feedWei);
+                if (!isApproved) throw new Error('Authorization failed');
+                showModal(`Adding ${feedAmount} FEED as collateral... ⛓️`);
+                await contract.methods.addCollateral(feedWei).send({ from: accounts[0], gas: 200000 });
+                showModal('Transaction successful! 🚀');
+                document.getElementById('addCollateralInput').value = '';
+                updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
+            } catch (error) { showModal(`Add collateral failed: ${error.message}`); }
+            finally { isOperationInProgress = false; document.getElementById('addCollateralButton').classList.remove('loading'); }
         }
 
         async function burnFee() {
@@ -377,12 +466,12 @@
                 burnButton.classList.add('loading');
                 const feeWei = web3.utils.toWei(feeAmount, 'ether');
                 showModal(`Burning ${feeAmount} FEE... 🔥`);
-                const tx = await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
-                showModal(`Burn successful! Tx: ${tx.transactionHash} 🚀`);
+                await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
+                showModal('Transaction successful! 🚀');
                 document.getElementById('burnFeeInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Burn failed: ${error.message}`); }
-            finally { isOperationInProgress = false; burnButton.classList.remove('loading'); }
+            finally { isOperationInProgress = false; document.getElementById('burnButton').classList.remove('loading'); }
         }
 
         async function liquidateUser() {
@@ -394,11 +483,11 @@
                 const liquidateButton = document.getElementById('liquidateButton');
                 liquidateButton.classList.add('loading');
                 showModal(`Liquidating ${userAddress}... ⚡`);
-                const tx = await contract.methods.liquidate(userAddress).send({ from: accounts[0], gas: 300000 });
-                showModal(`Liquidation successful! Tx: ${tx.transactionHash} 💰`);
+                await contract.methods.liquidate(userAddress).send({ from: accounts[0], gas: 300000 });
+                showModal('Transaction successful! 💰');
                 updateBalances(); updateFeedPrice(); updateTargetCollateralRatio(); fetchLiquidatableUsers();
             } catch (error) { showModal(`Liquidation failed: ${error.message}`); }
-            finally { isOperationInProgress = false; liquidateButton.classList.remove('loading'); }
+            finally { isOperationInProgress = false; document.getElementById('liquidateButton').classList.remove('loading'); }
         }
 
         setInterval(() => { if (!isOperationInProgress) updateBalances(); }, 5000);
@@ -408,6 +497,7 @@
 
         document.getElementById('connectButton').addEventListener('click', connectWallet);
         document.getElementById('mintButton').addEventListener('click', mintFee);
+        document.getElementById('addCollateralButton').addEventListener('click', addCollateral);
         document.getElementById('burnButton').addEventListener('click', burnFee);
         document.getElementById('liquidateButton').addEventListener('click', liquidateUser);
         window.ethereum?.on('chainChanged', (chainId) => { if (parseInt(chainId, 16) !== 109) { showModal('Switched to wrong network. Please reconnect to Shibarium.'); web3 = null; contract = null; accounts = null; document.getElementById('walletAddress').innerText = 'Not connected'; } else { connectWallet(); } });
