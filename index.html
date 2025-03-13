@@ -25,6 +25,7 @@
         .button-group { display: flex; justify-content: center; gap: 12px; margin-top: 15px }
         button { background: #F4A261; color: #fff; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-size: 1em; font-weight: 500; letter-spacing: 0.5px; transition: background 0.3s, transform 0.2s }
         button:hover { background: #E07A5F; transform: scale(1.05) }
+        button:disabled { background: #6c757d; cursor: not-allowed; opacity: 0.6; transform: none }
         button.loading { opacity: 0.7; pointer-events: none }
         .input-group { display: flex; flex-direction: column; gap: 10px; margin: 15px 0 }
         input { padding: 10px; border: none; border-radius: 15px; background: #34495E; color: #fff; font-size: 1em; text-align: center; font-weight: 500 }
@@ -35,7 +36,7 @@
         .percentage-btn { background: #F4A261; color: #fff; border: none; padding: 8px 12px; border-radius: 15px; font-size: 0.9em; cursor: pointer; font-weight: 500; transition: background 0.3s, transform 0.2s }
         .percentage-btn:hover { background: #E07A5F; transform: scale(1.05) }
         .info-panel { background: #34495E; padding: 12px; border-radius: 15px; margin-top: 15px; font-size: 0.9em; color: #fff; font-weight: 400; letter-spacing: 0.5px; display: flex; flex-direction: column; gap: 5px }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000 }
+        .modal { publisher: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000 }
         .modal-content { background: #2C3E50; padding: 25px; border-radius: 20px; text-align: center; color: #fff; max-width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.5) }
         .modal-content p { margin-bottom: 20px; font-size: 1.1em; font-weight: 500 }
         .modal-content button { background: #F4A261; padding: 10px 20px; border-radius: 25px; font-size: 1em }
@@ -170,13 +171,24 @@
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
                 const collateral = await contract.methods.collateral(accounts[0]).call();
                 const feedPrice = await contract.methods.getFeedPrice().call();
+                
                 const maxBurnableFee = new web3.utils.BN(collateral)
                     .mul(new web3.utils.BN(feedPrice))
                     .div(new web3.utils.BN('10').pow(new web3.utils.BN(18)));
+        
                 document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
                 document.getElementById('feeBalanceBurn').innerText = `${parseFloat(web3.utils.fromWei(maxBurnableFee.toString(), 'ether')).toFixed(18)} FEE`;
                 document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(18)} FEED`;
                 document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(18)} FEED`;
+        
+                const burnButton = document.getElementById('burnButton');
+                const feeBalanceBN = new web3.utils.BN(feeBalance);
+                if (feeBalanceBN.lt(maxBurnableFee)) {
+                    burnButton.disabled = true;
+                } else {
+                    burnButton.disabled = false;
+                }
+        
                 updateEstimatedFee();
             } catch (error) {
                 console.error('Error updating balances:', error);
