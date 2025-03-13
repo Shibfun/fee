@@ -195,31 +195,26 @@
                 const collateralRatio = await contract.methods.getCollateralRatio(accounts[0]).call();
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
                 const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12));
-
                 const mintFeedInput = document.getElementById('mintFeedInput').value || '';
                 let feedAmountWei = new web3.utils.BN(feedBalance);
                 if (mintFeedInput && Number(mintFeedInput) > 0 && Number(mintFeedInput) <= parseFloat(web3.utils.fromWei(feedBalance, 'ether'))) {
                     feedAmountWei = new web3.utils.BN(web3.utils.toWei(mintFeedInput.toString(), 'ether'));
                 }
-
                 const hundredBN = new web3.utils.BN(100);
                 const ten18BN = new web3.utils.BN('1000000000000000000');
                 const minCollateralRatioBN = new web3.utils.BN('150000000000000000000');
-
                 let maxMintableFee = new web3.utils.BN(0);
                 if (feedAmountWei.gt(new web3.utils.BN(0))) {
                     const numerator = feedAmountWei.mul(hundredBN).mul(ten18BN);
                     const denominator = feedPrice.mul(minCollateralRatioBN);
                     maxMintableFee = numerator.div(denominator);
                 }
-
                 document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(4)} FEE`;
                 document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(4)} FEED`;
                 document.getElementById('userDebt').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(4)} FEE`;
                 document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED`;
                 document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
                 document.getElementById('maxMintableFee').innerText = `${parseFloat(web3.utils.fromWei(maxMintableFee.toString(), 'ether')).toFixed(9)} FEE`;
-
                 const redeemableFeed = debt > 0 ? (new web3.utils.BN(debt).mul(ten18BN)).div(feedPrice) : new web3.utils.BN(0);
                 document.getElementById('redeemableFeed').innerText = `${parseFloat(web3.utils.fromWei(redeemableFeed.toString(), 'ether')).toFixed(4)} FEED`;
             } catch (error) { console.error('Error updating balances:', error); }
@@ -368,8 +363,8 @@
                 if (isPaused) { throw new Error('Contract is paused. Please contact the contract owner.'); }
                 const currentCollateral = await contract.methods.collateral(accounts[0]).call();
                 const currentDebt = await contract.methods.debt(accounts[0]).call();
-                const ratio = currentDebt == 0 ? web3.utils.toWei('infinity', 'ether') : await contract.methods.getCollateralRatio(accounts[0]).call();
-                console.log(`Current Collateral: ${web3.utils.fromWei(currentCollateral)}, Debt: ${web3.utils.fromWei(currentDebt)}, Ratio: ${web3.utils.fromWei(ratio, 'ether') / 10**16}%`);
+                const ratio = currentDebt == 0 ? 'Infinity' : await contract.methods.getCollateralRatio(accounts[0]).call();
+                console.log(`Current Collateral: ${web3.utils.fromWei(currentCollateral)}, Debt: ${web3.utils.fromWei(currentDebt)}, Ratio: ${currentDebt == 0 ? 'Infinity' : (parseFloat(web3.utils.fromWei(ratio, 'ether')) / 10**16)}%`);
                 showModal(`Minting ${parseFloat(web3.utils.fromWei(feeAmount.toString(), 'ether')).toFixed(9)} FEE with ${feedAmount} FEED... ⛏️`);
                 const tx = await contract.methods.mint(feeAmount.toString()).send({ from: accounts[0], gas: 500000 });
                 showModal(`Minted ${parseFloat(web3.utils.fromWei(feeAmount.toString(), 'ether')).toFixed(9)} FEE successfully! Tx: ${tx.transactionHash} 💎`);
