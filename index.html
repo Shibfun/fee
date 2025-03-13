@@ -36,86 +36,9 @@
             filter: blur(5px);
             z-index: -1;
         }
-        .header, .container, footer, .modal {
+        .container, footer, .modal {
             position: relative;
             z-index: 1;
-        }
-        .header {
-            padding: 10px 0;
-            text-align: center;
-            width: 100%;
-        }
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 15px;
-            height: 40px;
-        }
-        .header-top .balance {
-            font-size: 1.1em;
-            color: #F4A261;
-        }
-        .header-top .actions {
-            display: flex;
-            gap: 10px;
-        }
-        .action-btn {
-            background: #34495E;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 0.8em;
-            cursor: pointer;
-        }
-        .action-btn i {
-            font-size: 1em;
-        }
-        .header-content {
-            padding: 20px 0;
-        }
-        .header-content h1 {
-            font-size: 1.5em;
-            color: #F4A261;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .profile-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        .avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        .nickname {
-            font-size: 1em;
-            font-weight: bold;
-            color: #A8B5D4;
-            margin-right: 5px;
-        }
-        .miner-gif {
-            width: 80px;
-            height: 80px;
-            background: url('images/miner.gif') no-repeat center;
-            background-size: contain;
-            margin: 0 auto 10px;
-        }
-        .miner-prompt {
-            font-size: 0.8em;
-            color: #F4A261;
-            text-align: center;
-            margin-bottom: 10px;
-            animation: fade 3s infinite;
-        }
-        @keyframes fade {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
         }
         .container {
             width: 100%;
@@ -247,35 +170,12 @@
             margin-top: 20px;
         }
         @media (max-width: 480px) {
-            .header-content h1 { font-size: 1.3em; }
-            .miner-gif { width: 60px; height: 60px; }
             button { padding: 6px 12px; font-size: 0.8em; }
             input { font-size: 0.8em; }
-            .miner-prompt { font-size: 0.7em; }
-            .avatar { width: 20px; height: 20px; }
-            .nickname { font-size: 0.9em; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-top">
-            <span id="feeBalance">0 FEE</span>
-            <div class="actions">
-                <button class="action-btn" onclick="window.open('https://x.com/feedcto', '_blank')"><i class="fab fa-twitter"></i></button>
-                <button class="action-btn" onclick="window.open('https://t.me/feedcto', '_blank')"><i class="fab fa-telegram-plane"></i></button>
-            </div>
-        </div>
-        <div class="header-content">
-            <h1>FeeStablecoin DApp</h1>
-            <div class="profile-section">
-                <img class="avatar" id="userAvatar" src="images/default-avatar.png" alt="Avatar">
-                <span class="nickname" id="userNickname">Woof Wallet</span>
-            </div>
-            <div class="fee-gif"></div>
-            <div class="miner-prompt" id="minerPrompt"></div>
-        </div>
-    </div>
     <div class="container">
         <div class="section">
             <div class="section-title">Connect Wallet</div>
@@ -314,7 +214,7 @@
                 <button class="percentage-btn" onclick="setBurnPercentage(75)">75%</button>
                 <button class="percentage-btn" onclick="setBurnPercentage(100)">100%</button>
             </div>
-            <div class="info-panel">Debt: <span id="userDebt">0 FEE</span> | Collateral: <span id="userCollateral">0 FEED</span></div>
+            <div class="info-panel">Debt: <span id="userDebt">0 FEE</span> | Collateral: <span id="userCollateral">0 FEED</span> | Ratio: <span id="collateralRatio">N/A</span>%</div>
         </div>
         <div class="section">
             <div class="section-title">Liquidate</div>
@@ -324,7 +224,7 @@
             <div class="input-group">
                 <input type="text" id="liquidateAddressInput" placeholder="User Address to Liquidate">
             </div>
-            <div class="info-panel">FEED Price: <span id="feedPrice">0 USDT</span></div>
+            <div class="info-panel">FEED Price: <span id="feedPrice">0 USDT</span> | Target Ratio: <span id="targetCollateralRatio">N/A</span>%</div>
         </div>
     </div>
     <footer>Powered by Shibarium © 2025</footer>
@@ -340,26 +240,8 @@
         const contractAddress = "0xae0dA90E15Ad30FA3F27C877E9468701bD593391";
         const FEED_ADDRESS = "0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0";
         const contractABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Burn","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Liquidate","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[],"name":"FEED","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MIN_COLLATERAL_RATIO","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"PEG","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"WOOF_DAO","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner_","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"collateral","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"debt","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getCollateralRatio","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"lastValidPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"liquidate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"}];
-        const FEED_ABI = [
-            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
-        ];
-        const shibariumMainnet = {
-            chainId: 109,
-            chainName: 'Shibarium',
-            nativeCurrency: { name: 'BONE', symbol: 'BONE', decimals: 18 },
-            rpcUrls: ['https://www.shibrpc.com'],
-            blockExplorerUrls: ['https://shibariumscan.io']
-        };
-
-        const prompts = [
-            "⛏️ Ready to mint some FEE? Stake your FEED now!",
-            "💎 FEED price dropping? Time to liquidate!",
-            "⚡ Power up your wallet! Mint FEE with FEED!",
-            "🚀 Burn FEE, reclaim FEED—keep the cycle going!",
-            "🔥 Stablecoin vibes! Mint FEE at 150% collateral!"
-        ];
-        let promptIndex = 0;
+        const FEED_ABI = [{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+        const shibariumMainnet = {chainId: 109,chainName: 'Shibarium',nativeCurrency: {name: 'BONE',symbol: 'BONE',decimals: 18},rpcUrls: ['https://www.shibrpc.com'],blockExplorerUrls: ['https://shibariumscan.io']};
 
         function showModal(message) {
             document.getElementById('modalMessage').innerHTML = message;
@@ -368,11 +250,6 @@
 
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
-        }
-
-        function updatePrompt() {
-            document.getElementById('minerPrompt').innerText = prompts[promptIndex];
-            promptIndex = (promptIndex + 1) % prompts.length;
         }
 
         async function connectWallet() {
@@ -392,16 +269,10 @@
                 const chainId = await web3.eth.getChainId();
                 if (chainId !== 109) {
                     try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: web3.utils.numberToHex(109) }]
-                        });
+                        await window.ethereum.request({method: 'wallet_switchEthereumChain',params: [{chainId: web3.utils.numberToHex(109)}]});
                     } catch (switchError) {
                         if (switchError.code === 4902) {
-                            await window.ethereum.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [shibariumMainnet]
-                            });
+                            await window.ethereum.request({method: 'wallet_addEthereumChain',params: [shibariumMainnet]});
                         } else {
                             showModal('Failed to switch network. Please add Shibarium manually.');
                             return;
@@ -413,7 +284,6 @@
                 feedContract = new web3.eth.Contract(FEED_ABI, FEED_ADDRESS);
                 showModal('Connected to Shibarium successfully! 🎉');
                 updateBalances();
-                updateUserInfo();
                 updateFeedPrice();
             } catch (error) {
                 showModal(`Connection failed: ${error.message}`);
@@ -424,29 +294,38 @@
 
         async function updateBalances() {
             if (!web3 || !contract || !accounts) return;
-            const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
             const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
             const debt = await contract.methods.debt(accounts[0]).call();
             const collateral = await contract.methods.collateral(accounts[0]).call();
-            document.getElementById('feeBalance').innerText = `${web3.utils.fromWei(feeBalance, 'ether')} FEE`;
-            document.getElementById('feedBalance').innerText = `${web3.utils.fromWei(feedBalance, 'ether')} FEED`;
-            document.getElementById('userDebt').innerText = `${web3.utils.fromWei(debt, 'ether')} FEE`;
-            document.getElementById('userCollateral').innerText = `${web3.utils.fromWei(collateral, 'ether')} FEED`;
+            const collateralRatio = await contract.methods.getCollateralRatio(accounts[0]).call();
+            document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(2)} FEED`;
+            document.getElementById('userDebt').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(2)} FEE`;
+            document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(2)} FEED`;
+            document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${parseFloat(web3.utils.fromWei(collateralRatio, 'ether')).toFixed(2)}`;
         }
 
         async function updateFeedPrice() {
             if (!web3 || !contract || !accounts) return;
             const feedPrice = await contract.methods.getFeedPrice().call();
-            document.getElementById('feedPrice').innerText = `${web3.utils.fromWei(feedPrice, 'ether')} USDT`;
+            document.getElementById('feedPrice').innerText = `${parseFloat(web3.utils.fromWei(feedPrice, 'ether')).toFixed(2)} USDT`;
         }
 
-        async function updateUserInfo() {
-            if (!web3 || !accounts) {
-                document.getElementById('userNickname').innerText = 'Woof Wallet';
-                document.getElementById('userAvatar').src = 'images/default-avatar.png';
+        async function updateTargetCollateralRatio() {
+            if (!web3 || !contract || !accounts) {
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
                 return;
             }
-            document.getElementById('userNickname').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
+            const targetAddress = document.getElementById('liquidateAddressInput').value;
+            if (!web3.utils.isAddress(targetAddress)) {
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
+                return;
+            }
+            try {
+                const collateralRatio = await contract.methods.getCollateralRatio(targetAddress).call();
+                document.getElementById('targetCollateralRatio').innerText = `${parseFloat(web3.utils.fromWei(collateralRatio, 'ether')).toFixed(2)}`;
+            } catch (error) {
+                document.getElementById('targetCollateralRatio').innerText = 'N/A';
+            }
         }
 
         function setMintPercentage(percentage) {
@@ -459,7 +338,7 @@
                 const feedBalance = parseFloat(feedBalanceText);
                 const feedPrice = await contract.methods.getFeedPrice().call();
                 const feedPriceEther = parseFloat(web3.utils.fromWei(feedPrice, 'ether'));
-                const maxFee = (feedBalance * feedPriceEther * 100) / 150; // 150% collateral ratio
+                const maxFee = (feedBalance * feedPriceEther * 100) / 150;
                 const feeAmount = (maxFee * percentage) / 100;
                 document.getElementById('mintAmountInput').value = feeAmount.toFixed(2);
             });
@@ -492,9 +371,9 @@
                 const feeWei = web3.utils.toWei(feeAmount, 'ether');
                 const feedPrice = await contract.methods.getFeedPrice().call();
                 const requiredCollateral = (BigInt(feeWei) * BigInt(150) * BigInt(10**18)) / (BigInt(feedPrice) * BigInt(100));
-                await feedContract.methods.approve(contractAddress, requiredCollateral.toString()).send({ from: accounts[0] });
-                showModal(`Minting ${feeAmount} FEE with ${web3.utils.fromWei(requiredCollateral.toString(), 'ether')} FEED... ⛏️`);
-                await contract.methods.mint(feeWei).send({ from: accounts[0] });
+                await feedContract.methods.approve(contractAddress, requiredCollateral.toString()).send({from: accounts[0]});
+                showModal(`Minting ${feeAmount} FEE with ${parseFloat(web3.utils.fromWei(requiredCollateral.toString(), 'ether')).toFixed(2)} FEED... ⛏️`);
+                await contract.methods.mint(feeWei).send({from: accounts[0]});
                 showModal(`Minted ${feeAmount} FEE successfully! 💎`);
                 updateBalances();
                 updateFeedPrice();
@@ -516,7 +395,7 @@
             try {
                 const feeWei = web3.utils.toWei(feeAmount, 'ether');
                 showModal(`Burning ${feeAmount} FEE... 🔥`);
-                await contract.methods.burn(feeWei).send({ from: accounts[0] });
+                await contract.methods.burn(feeWei).send({from: accounts[0]});
                 showModal(`Burned ${feeAmount} FEE and reclaimed FEED! 🚀`);
                 updateBalances();
                 updateFeedPrice();
@@ -542,23 +421,25 @@
                     return;
                 }
                 showModal(`Liquidating ${userAddress}... ⚡`);
-                await contract.methods.liquidate(userAddress).send({ from: accounts[0] });
+                await contract.methods.liquidate(userAddress).send({from: accounts[0]});
                 showModal(`Liquidated ${userAddress} successfully! FEED claimed! 💰`);
                 updateBalances();
                 updateFeedPrice();
+                updateTargetCollateralRatio();
             } catch (error) {
                 showModal(`Liquidation failed: ${error.message}`);
             }
         }
 
-        setInterval(updatePrompt, 3000);
         setInterval(updateBalances, 5000);
         setInterval(updateFeedPrice, 5000);
+        setInterval(updateTargetCollateralRatio, 5000);
 
         document.getElementById('connectButton').addEventListener('click', connectWallet);
         document.getElementById('mintButton').addEventListener('click', mintFee);
         document.getElementById('burnButton').addEventListener('click', burnFee);
         document.getElementById('liquidateButton').addEventListener('click', liquidateUser);
+        document.getElementById('liquidateAddressInput').addEventListener('input', updateTargetCollateralRatio);
 
         window.ethereum?.on('chainChanged', (chainId) => {
             if (parseInt(chainId, 16) !== 109) {
