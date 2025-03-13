@@ -56,7 +56,7 @@
 <body>
     <div class="header">
         <div class="header-top">
-            <span id="feeBalance">0.000000000000000000 FEE</span>
+            <span id="feeBalance">0.0000 FEE</span>
             <div class="actions">
                 <button class="action-btn" onclick="window.open('https://x.com/feedcto', '_blank')"><i class="fab fa-twitter"></i></button>
                 <button class="action-btn" onclick="window.open('https://t.me/feedcto', '_blank')"><i class="fab fa-telegram-plane"></i></button>
@@ -88,8 +88,8 @@
                 <button class="percentage-btn" onclick="setMintPercentage(100)">100%</button>
             </div>
             <div class="info-panel">
-                <div>FEED Balance: <span id="feedBalance">0.000000000000000000 FEED</span></div>
-                <div>Max Mintable FEE: <span id="maxMintableFee">0.000000000000000000 FEE</span></div>
+                <div>FEED Balance: <span id="feedBalance">0.0000 FEED</span></div>
+                <div>Max Mintable FEE: <span id="maxMintableFee">0.000000000 FEE</span></div>
                 <div>FEED Price: <span id="mintFeedPrice">0.0000000000000 USDT</span></div>
             </div>
         </div>
@@ -108,10 +108,10 @@
                 <button class="percentage-btn" onclick="setBurnPercentage(100)">100%</button>
             </div>
             <div class="info-panel">
-                <div>Debt: <span id="userDebt">0.000000000000000000 FEE</span></div>
-                <div>Collateral: <span id="userCollateral">0.000000000000000000 FEED</span></div>
+                <div>Debt: <span id="userDebt">0.0000 FEE</span></div>
+                <div>Collateral: <span id="userCollateral">0.0000 FEED</span></div>
                 <div>Ratio: <span id="collateralRatio">N/A</span>%</div>
-                <div>Redeemable FEED: <span id="redeemableFeed">0.000000000000000000 FEED</span></div>
+                <div>Redeemable FEED: <span id="redeemableFeed">0.0000 FEED</span></div>
             </div>
         </div>
         <div class="section">
@@ -125,8 +125,8 @@
             <div class="info-panel">
                 <div>FEED Price: <span id="feedPrice">0.0000000000000 USDT</span></div>
                 <div>Target Ratio: <span id="targetCollateralRatio">N/A</span>%</div>
-                <div>Liquidatable FEE: <span id="liquidatableFee">0.000000000000000000 FEE</span></div>
-                <div>Collateral FEED: <span id="liquidatableCollateral">0.000000000000000000 FEED</span></div>
+                <div>Liquidatable FEE: <span id="liquidatableFee">0.0000 FEE</span></div>
+                <div>Collateral FEED: <span id="liquidatableCollateral">0.0000 FEED</span></div>
             </div>
             <div class="section-title">Liquidatable Addresses</div>
             <div class="liquidation-list" id="liquidationList"></div>
@@ -137,7 +137,7 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <p id="modalMessage"></p>
-            <button onclick="closeModal()">OK</button>
+            <button id="modalOkButton" onclick="closeModal()">OK</button>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
@@ -192,9 +192,13 @@
 
         let currentPage = 1;
         const itemsPerPage = 5;
-        let isOperationInProgress = false; // Flag to track if an operation (like mint) is in progress
+        let isOperationInProgress = false;
 
-        function showModal(message) { document.getElementById('modalMessage').innerHTML = message; document.getElementById('modal').style.display = 'flex'; }
+        function showModal(message) {
+            document.getElementById('modalMessage').innerHTML = message;
+            document.getElementById('modal').style.display = 'flex';
+            document.getElementById('modalOkButton').focus(); // Auto-focus OK button
+        }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
         async function connectWallet() {
@@ -223,7 +227,7 @@
         }
 
         async function updateBalances() {
-            if (!web3 || !contract || !accounts) return;
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
             try {
                 const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
@@ -234,14 +238,13 @@
                 const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
 
                 // Determine the amount to use for maxMintableFee based on user input
-                const mintFeedInput = document.getElementById('mintFeedInput').value;
+                const mintFeedInput = document.getElementById('mintFeedInput').value || '';
                 let feedAmountWei = new web3.utils.BN(feedBalance);
-                if (mintFeedInput && Number(mintFeedInput) > 0) {
-                    feedAmountWei = new web3.utils.BN(web3.utils.toWei(mintFeedInput, 'ether'));
+                if (mintFeedInput && Number(mintFeedInput) > 0 && Number(mintFeedInput) <= parseFloat(web3.utils.fromWei(feedBalance, 'ether'))) {
+                    feedAmountWei = new web3.utils.BN(web3.utils.toWei(mintFeedInput.toString(), 'ether'));
                 }
 
                 // Calculate maxMintableFee using BN
-                const feedBalanceBN = new web3.utils.BN(feedBalance);
                 const hundredBN = new web3.utils.BN(100);
                 const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
                 const minCollateralRatioBN = new web3.utils.BN('150000000000000000000'); // 150 * 10^16
@@ -255,9 +258,9 @@
 
                 // Update UI with formatted numbers
                 document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(4)} FEE`;
-                document.getElementById('feedBalance').innerText = parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(4);
+                document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(4)} FEED`;
                 document.getElementById('userDebt').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(4)} FEE`;
-                document.getElementById('userCollateral').innerText = parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4);
+                document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED`;
                 document.getElementById('collateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
                 document.getElementById('maxMintableFee').innerText = `${parseFloat(web3.utils.fromWei(maxMintableFee.toString(), 'ether')).toFixed(9)} FEE`;
 
@@ -267,11 +270,7 @@
         }
 
         async function updateFeedPrice() {
-            if (!web3 || !contract || !accounts) {
-                document.getElementById('feedPrice').innerText = '0.0000000000000 USDT';
-                document.getElementById('mintFeedPrice').innerText = '0.0000000000000 USDT';
-                return;
-            }
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
             try {
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
                 const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
@@ -286,17 +285,12 @@
         }
 
         async function updateTargetCollateralRatio() {
-            if (!web3 || !contract || !accounts) {
-                document.getElementById('targetCollateralRatio').innerText = 'N/A';
-                document.getElementById('liquidatableFee').innerText = '0.000000000000000000 FEE';
-                document.getElementById('liquidatableCollateral').innerText = '0.000000000000000000 FEED';
-                return;
-            }
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
             const targetAddress = document.getElementById('liquidateAddressInput').value;
             if (!web3.utils.isAddress(targetAddress)) {
                 document.getElementById('targetCollateralRatio').innerText = 'N/A';
-                document.getElementById('liquidatableFee').innerText = '0.000000000000000000 FEE';
-                document.getElementById('liquidatableCollateral').innerText = '0.000000000000000000 FEED';
+                document.getElementById('liquidatableFee').innerText = '0.0000 FEE';
+                document.getElementById('liquidatableCollateral').innerText = '0.0000 FEED';
                 return;
             }
             try {
@@ -305,17 +299,17 @@
                 const collateral = await contract.methods.collateral(targetAddress).call();
                 document.getElementById('targetCollateralRatio').innerText = debt == 0 ? 'N/A' : `${(parseFloat(web3.utils.fromWei(collateralRatio, 'ether')) / 10**16).toFixed(2)}%`;
                 document.getElementById('liquidatableFee').innerText = `${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(4)} FEE`;
-                document.getElementById('liquidatableCollateral').innerText = parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4);
+                document.getElementById('liquidatableCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED`;
             } catch (error) {
                 document.getElementById('targetCollateralRatio').innerText = 'N/A';
-                document.getElementById('liquidatableFee').innerText = '0.000000000000000000 FEE';
-                document.getElementById('liquidatableCollateral').innerText = '0.000000000000000000 FEED';
+                document.getElementById('liquidatableFee').innerText = '0.0000 FEE';
+                document.getElementById('liquidatableCollateral').innerText = '0.0000 FEED';
                 console.error('Error updating target collateral ratio:', error);
             }
         }
 
         async function fetchLiquidatableUsers() {
-            if (!web3 || !contract || !accounts) return;
+            if (!web3 || !contract || !accounts || isOperationInProgress) return;
             const liquidationList = document.getElementById('liquidationList');
             const pagination = document.getElementById('pagination');
             liquidationList.innerHTML = 'Loading...';
@@ -347,33 +341,27 @@
         async function setMintPercentage(percentage) {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             try {
-                // Get FEED balance in wei
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
                 if (BigInt(feedBalance) <= 0) { showModal('Insufficient FEED balance to mint!'); return; }
 
-                // Calculate feedAmount as a percentage of the balance (in wei)
                 const feedBalanceBigInt = BigInt(feedBalance);
                 const percentageBigInt = BigInt(percentage);
                 const hundredBigInt = BigInt(100);
                 const feedAmountWei = (feedBalanceBigInt * percentageBigInt) / hundredBigInt;
                 const feedAmountEther = web3.utils.fromWei(feedAmountWei.toString(), 'ether');
 
-                // Get feed price
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12));
 
-                // Calculate maxMintableFee
-                const feedPriceBN = new web3.utils.BN(feedPrice);
                 const feedAmountWeiBN = new web3.utils.BN(feedAmountWei);
                 const hundredBN = new web3.utils.BN(100);
-                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
-                const minCollateralRatioBN = new web3.utils.BN('150000000000000000000'); // 150 * 10^16
+                const ten18BN = new web3.utils.BN('1000000000000000000');
+                const minCollateralRatioBN = new web3.utils.BN('150000000000000000000');
 
                 const numerator = feedAmountWeiBN.mul(hundredBN).mul(ten18BN);
-                const denominator = feedPriceBN.mul(minCollateralRatioBN);
+                const denominator = feedPrice.mul(minCollateralRatioBN);
                 const maxMintableFee = numerator.div(denominator);
 
-                // Update UI
                 document.getElementById('mintFeedInput').value = parseInt(feedAmountEther);
                 document.getElementById('maxMintableFee').innerText = `${parseFloat(web3.utils.fromWei(maxMintableFee.toString(), 'ether')).toFixed(9)} FEE`;
             } catch (error) { showModal(`Error setting mint percentage: ${error.message}`); }
@@ -384,7 +372,7 @@
             try {
                 const debt = await contract.methods.debt(accounts[0]).call();
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12));
 
                 const debtBN = new web3.utils.BN(debt);
                 const percentageBN = new web3.utils.BN(percentage);
@@ -392,7 +380,7 @@
                 const burnAmountWei = debtBN.mul(percentageBN).div(hundredBN);
                 const burnAmountEther = web3.utils.fromWei(burnAmountWei.toString(), 'ether');
 
-                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
+                const ten18BN = new web3.utils.BN('1000000000000000000');
                 const redeemableFeed = burnAmountWei.gt(new web3.utils.BN(0)) ? (burnAmountWei.mul(ten18BN)).div(feedPrice) : new web3.utils.BN(0);
 
                 document.getElementById('burnFeeInput').value = parseFloat(burnAmountEther).toFixed(9);
@@ -403,40 +391,48 @@
         async function mintFee() {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             const feedAmount = document.getElementById('mintFeedInput').value;
-            if (!feedAmount || !Number.isInteger(Number(feedAmount)) || feedAmount <= 0) { showModal('Please enter a valid integer FEED amount!'); return; }
+            if (!feedAmount || !Number.isInteger(Number(feedAmount)) || feedAmount <= 0 || feedAmount > parseFloat(document.getElementById('feedBalance').innerText)) {
+                showModal('Please enter a valid integer FEED amount within your balance!');
+                return;
+            }
 
             try {
-                isOperationInProgress = true; // Set flag to pause updates
+                isOperationInProgress = true;
                 const mintButton = document.getElementById('mintButton');
                 mintButton.classList.add('loading');
 
                 const feedWei = web3.utils.toWei(feedAmount.toString(), 'ether');
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12));
                 const hundredBN = new web3.utils.BN(100);
-                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
-                const minCollateralRatioBN = new web3.utils.BN('150000000000000000000'); // 150 * 10^16
+                const ten18BN = new web3.utils.BN('1000000000000000000');
+                const minCollateralRatioBN = new web3.utils.BN('150000000000000000000');
 
                 const feedWeiBN = new web3.utils.BN(feedWei);
                 const numerator = feedWeiBN.mul(hundredBN).mul(ten18BN);
                 const denominator = feedPrice.mul(minCollateralRatioBN);
                 const feeAmount = numerator.div(denominator);
 
-                // Check allowance
+                // Check allowance and approve if needed
                 const allowance = await feedContract.methods.allowance(accounts[0], contractAddress).call();
                 if (new web3.utils.BN(allowance).lt(feedWeiBN)) {
                     showModal(`Approving ${feedAmount} FEED for minting... 🛠️`);
-                    await feedContract.methods.approve(contractAddress, feedWei).send({ from: accounts[0] });
+                    await feedContract.methods.approve(contractAddress, feedWei).send({ from: accounts[0], gas: 200000 });
                     showModal(`Approved ${feedAmount} FEED successfully! ✅`);
                 }
 
+                // Check contract paused status
+                const isPaused = await contract.methods.paused().call();
+                if (isPaused) { throw new Error('Contract is paused. Please contact the contract owner.'); }
+
                 showModal(`Minting ${parseFloat(web3.utils.fromWei(feeAmount.toString(), 'ether')).toFixed(9)} FEE with ${feedAmount} FEED... ⛏️`);
-                await contract.methods.mint(feeAmount.toString()).send({ from: accounts[0] });
-                showModal(`Minted ${parseFloat(web3.utils.fromWei(feeAmount.toString(), 'ether')).toFixed(9)} FEE successfully! 💎`);
-                document.getElementById('mintFeedInput').value = ''; // Clear input after success
+                const tx = await contract.methods.mint(feeAmount.toString()).send({ from: accounts[0], gas: 300000 });
+                showModal(`Minted ${parseFloat(web3.utils.fromWei(feeAmount.toString(), 'ether')).toFixed(9)} FEE successfully! Tx: ${tx.transactionHash} 💎`);
+                document.getElementById('mintFeedInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) {
-                showModal(`Mint failed: ${error.message}`);
+                showModal(`Mint failed: ${error.message}. Please check gas, balance, or contract status.`);
+                console.error('Mint error:', error);
             } finally {
                 isOperationInProgress = false;
                 mintButton.classList.remove('loading');
@@ -446,7 +442,10 @@
         async function burnFee() {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first! 🔧'); return; }
             const feeAmount = document.getElementById('burnFeeInput').value;
-            if (!feeAmount || feeAmount <= 0) { showModal('Please enter a valid FEE amount!'); return; }
+            if (!feeAmount || feeAmount <= 0 || feeAmount > parseFloat(document.getElementById('feeBalance').innerText)) {
+                showModal('Please enter a valid FEE amount within your balance!');
+                return;
+            }
 
             try {
                 isOperationInProgress = true;
@@ -455,16 +454,18 @@
 
                 const feeWei = web3.utils.toWei(feeAmount.toString(), 'ether');
                 const amplifiedFeedPrice = await contract.methods.getAmplifiedFeedPrice().call();
-                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12)); // Adjust for amplification factor
-                const ten18BN = new web3.utils.BN('1000000000000000000'); // 10^18
+                const feedPrice = new web3.utils.BN(amplifiedFeedPrice).div(new web3.utils.BN(10**12));
+                const ten18BN = new web3.utils.BN('1000000000000000000');
                 const feedAmount = (new web3.utils.BN(feeWei).mul(ten18BN)).div(feedPrice);
+
                 showModal(`Burning ${parseFloat(feeAmount).toFixed(9)} FEE to redeem ${parseFloat(web3.utils.fromWei(feedAmount.toString(), 'ether')).toFixed(4)} FEED... 🔥`);
-                await contract.methods.burn(feeWei).send({ from: accounts[0] });
-                showModal(`Burned ${parseFloat(feeAmount).toFixed(9)} FEE and reclaimed ${parseFloat(web3.utils.fromWei(feedAmount.toString(), 'ether')).toFixed(4)} FEED! 🚀`);
+                const tx = await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
+                showModal(`Burned ${parseFloat(feeAmount).toFixed(9)} FEE and reclaimed ${parseFloat(web3.utils.fromWei(feedAmount.toString(), 'ether')).toFixed(4)} FEED! Tx: ${tx.transactionHash} 🚀`);
                 document.getElementById('burnFeeInput').value = '';
                 updateBalances(); updateFeedPrice(); fetchLiquidatableUsers();
             } catch (error) {
-                showModal(`Burn failed: ${error.message}`);
+                showModal(`Burn failed: ${error.message}. Please check gas or balance.`);
+                console.error('Burn error:', error);
             } finally {
                 isOperationInProgress = false;
                 burnButton.classList.remove('loading');
@@ -482,22 +483,25 @@
                 liquidateButton.classList.add('loading');
 
                 const collateralRatio = await contract.methods.getCollateralRatio(userAddress).call();
-                if (BigInt(collateralRatio) >= BigInt(web3.utils.toWei('120', 'ether')) * BigInt(10**16) / BigInt(100)) { showModal('User cannot be liquidated: collateral ratio above 120%!'); return; }
+                if (BigInt(collateralRatio) >= BigInt(web3.utils.toWei('120', 'ether')) * BigInt(10**16) / BigInt(100)) {
+                    showModal('User cannot be liquidated: collateral ratio above 120%!');
+                    return;
+                }
                 const debt = await contract.methods.debt(userAddress).call();
                 const collateral = await contract.methods.collateral(userAddress).call();
                 showModal(`Liquidating ${userAddress} for ${parseFloat(web3.utils.fromWei(debt, 'ether')).toFixed(4)} FEE and ${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED... ⚡`);
-                await contract.methods.liquidate(userAddress).send({ from: accounts[0] });
-                showModal(`Liquidated ${userAddress} successfully! Claimed ${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED! 💰`);
+                const tx = await contract.methods.liquidate(userAddress).send({ from: accounts[0], gas: 300000 });
+                showModal(`Liquidated ${userAddress} successfully! Claimed ${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(4)} FEED! Tx: ${tx.transactionHash} 💰`);
                 updateBalances(); updateFeedPrice(); updateTargetCollateralRatio(); fetchLiquidatableUsers();
             } catch (error) {
-                showModal(`Liquidation failed: ${error.message}`);
+                showModal(`Liquidation failed: ${error.message}. Please check address or gas.`);
+                console.error('Liquidate error:', error);
             } finally {
                 isOperationInProgress = false;
                 liquidateButton.classList.remove('loading');
             }
         }
 
-        // Update intervals with operation check
         setInterval(() => { if (!isOperationInProgress) updateBalances(); }, 5000);
         setInterval(() => { if (!isOperationInProgress) updateFeedPrice(); }, 60000);
         setInterval(() => { if (!isOperationInProgress) updateTargetCollateralRatio(); }, 5000);
