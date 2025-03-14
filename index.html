@@ -235,13 +235,18 @@
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first!'); return; }
             try {
                 const [, feeMinted] = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+                const feeMintedBN = new web3.utils.BN(feeMinted);
+                if (feeMintedBN.isZero()) {
+                    document.getElementById('burnFeeInput').value = '0';
+                    return;
+                }
                 let feeAmountWei;
                 if (percentage === 100) {
                     const reserveAmount = web3.utils.toWei('0.000000000000001', 'ether');
-                    feeAmountWei = new web3.utils.BN(feeMinted).sub(new web3.utils.BN(reserveAmount));
+                    feeAmountWei = feeMintedBN.sub(new web3.utils.BN(reserveAmount));
                     if (feeAmountWei.lt(new web3.utils.BN(0))) feeAmountWei = new web3.utils.BN(0);
                 } else {
-                    feeAmountWei = new web3.utils.BN(feeMinted).mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
+                    feeAmountWei = feeMintedBN.mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
                 }
                 document.getElementById('burnFeeInput').value = parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether')).toFixed(18);
             } catch (error) {
