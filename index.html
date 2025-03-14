@@ -134,10 +134,7 @@
         async function connectWallet() {
             const connectButton = document.getElementById('connectButton');
             try {
-                if (!window.ethereum) {
-                    showModal('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.');
-                    return;
-                }
+                if (!window.ethereum) throw new Error('No wallet detected. Please install <a href="https://metamask.io" target="_blank">MetaMask</a>.');
                 connectButton.classList.add('loading');
                 web3 = new Web3(window.ethereum);
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -158,8 +155,8 @@
                 const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
                 document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
                 showModal('Connected to Shibarium successfully!');
-                updateBalances();
-                updateFeedPrice();
+                await updateBalances();
+                await updateFeedPrice();
             } catch (error) {
                 showModal(`Connection failed: ${error.message}`);
             } finally {
@@ -168,19 +165,27 @@
         }
 
         async function updateBalances() {
-            if (!web3 || !contract || !accounts || isOperationInProgress) return;
+            if (!web3 || !contract || !accounts || !feedContract || isOperationInProgress) return;
             try {
-                const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
-                const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
-                const [collateral, feeMinted] = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+                const [feeBalance, feedBalance, userData] = await Promise.all([
+                    contract.methods.balanceOf(accounts[0]).call().catch(() => '0'),
+                    feedContract.methods.balanceOf(accounts[0]).call().catch(() => '0'),
+                    contract.methods.getUserCollateralAndFee(accounts[0]).call().catch(() => ['0', '0'])
+                ]);
+                const collateral = userData[0];
+                const feeMinted = userData[1];
                 document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
                 document.getElementById('feeMinted').innerText = `${parseFloat(web3.utils.fromWei(feeMinted, 'ether')).toFixed(18)} FEE`;
                 document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(18)} FEED`;
                 document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(18)} FEED`;
-                document.getElementById('burnButton').disabled = feeMinted === '0';
-                updateEstimatedFee();
+                const burnButton = document.getElementById('burnButton');
+                const feeBalanceBN = new web3.utils.BN(feeBalance);
+                const feeMintedBN = new web3.utils.BN(feeMinted);
+                burnButton.disabled = feeBalanceBN.lt(feeMintedBN) || feeMintedBN.isZero();
+                await updateEstimatedFee();
             } catch (error) {
-                showModal('Failed to update balances');
+                showModal('Failed to update balances. Retrying...');
+                setTimeout(updateBalances, 2000);
             }
         }
 
@@ -220,7 +225,7 @@
                     feedAmountWei = new web3.utils.BN(feedBalance).mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
                 }
                 document.getElementById('mintFeedInput').value = parseFloat(web3.utils.fromWei(feedAmountWei.toString(), 'ether')).toFixed(18);
-                updateEstimatedFee();
+                await updateEstimatedFee();
             } catch (error) {
                 showModal('Error setting mint percentage');
             }
@@ -229,7 +234,7 @@
         async function setBurnPercentage(percentage) {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first!'); return; }
             try {
-                const [collateral, feeMinted] = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+                const [, feeMinted] = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
                 let feeAmountWei;
                 if (percentage === 100) {
                     const reserveAmount = web3.utils.toWei('0.000000000000001', 'ether');
@@ -273,8 +278,8 @@
                 await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
                 showModal('Mint successful!');
                 document.getElementById('mintFeedInput').value = '';
-                updateBalances();
-                updateFeedPrice();
+                await updateBalances();
+                await updateFeedPrice();
             } catch (error) {
                 showModal(`Mint failed: ${error.message}`);
             } finally {
@@ -301,8 +306,8 @@
                 await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
                 showModal('Burn successful!');
                 document.getElementById('burnFeeInput').value = '';
-                updateBalances();
-                updateFeedPrice();
+                await updateBalances();
+                await updateFeedPrice();
             } catch (error) {
                 showModal(`Burn failed: ${error.message}`);
             } finally {
