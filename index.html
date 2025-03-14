@@ -114,11 +114,11 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, accounts, contract, feedContract;
-        const contractAddress = "0x741ad8c7bfde6eC558091825Be8bC50e3d333212";
+        const CONTRACT_ADDRESS = "0x1365820d5e8031EcC3D020ead4FAf0805d336f94";
         const FEED_ADDRESS = "0xe9Cb2D7ADC24Fc59FE00D6C0A0669BDF16805Fe0";
-        const contractABI = [{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner_","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"collateral","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"feeMinted","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"WOOF_DAO","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"FEED","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getUserCollateralAndFee","outputs":[{"internalType":"uint256","name":"feedCollateral","type":"uint256"},{"internalType":"uint256","name":"feeGenerated","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Burn","type":"event"}];
-        const FEED_ABI = [{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner_","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
-        const shibariumMainnet = {chainId: 109, chainName: 'Shibarium', nativeCurrency: {name: 'BONE', symbol: 'BONE', decimals: 18}, rpcUrls: ['https://www.shibrpc.com'], blockExplorerUrls: ['https://shibariumscan.io']};
+        const CONTRACT_ABI = [{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"collateral","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"feeMinted","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"WOOF_DAO","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"FEED","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getFeedPrice","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getUserCollateralAndFee","outputs":[{"internalType":"uint256","name":"feedCollateral","type":"uint256"},{"internalType":"uint256","name":"feeGenerated","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"feeAmount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Mint","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"feeAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"feedAmount","type":"uint256"}],"name":"Burn","type":"event"}];
+        const FEED_ABI = [{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+        const SHIBARIUM_MAINNET = { chainId: 109, chainName: 'Shibarium', nativeCurrency: { name: 'BONE', symbol: 'BONE', decimals: 18 }, rpcUrls: ['https://www.shibrpc.com'], blockExplorerUrls: ['https://shibariumscan.io'] };
         let isOperationInProgress = false;
 
         function showModal(message) {
@@ -145,15 +145,13 @@
                     try {
                         await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: web3.utils.numberToHex(109) }] });
                     } catch (switchError) {
-                        if (switchError.code === 4902) await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [shibariumMainnet] });
+                        if (switchError.code === 4902) await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [SHIBARIUM_MAINNET] });
                         else throw switchError;
                     }
                 }
                 document.getElementById('walletAddress').innerText = `${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`;
-                contract = new web3.eth.Contract(contractABI, contractAddress);
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
                 feedContract = new web3.eth.Contract(FEED_ABI, FEED_ADDRESS);
-                const feeBalance = await contract.methods.balanceOf(accounts[0]).call();
-                document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
                 showModal('Connected to Shibarium successfully!');
                 await updateBalances();
                 await updateFeedPrice();
@@ -166,121 +164,101 @@
 
         async function updateBalances() {
             if (!web3 || !contract || !accounts || !feedContract || isOperationInProgress) return;
-            try {
-                const [feeBalance, feedBalance, userData] = await Promise.all([
-                    contract.methods.balanceOf(accounts[0]).call().catch(() => '0'),
-                    feedContract.methods.balanceOf(accounts[0]).call().catch(() => '0'),
-                    contract.methods.getUserCollateralAndFee(accounts[0]).call().catch(() => ['0', '0'])
-                ]);
-                const collateral = userData[0];
-                const feeMinted = userData[1];
-                document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
-                document.getElementById('feeMinted').innerText = `${parseFloat(web3.utils.fromWei(feeMinted, 'ether')).toFixed(18)} FEE`;
-                document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(18)} FEED`;
-                document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(18)} FEED`;
-                const burnButton = document.getElementById('burnButton');
-                const feeBalanceBN = new web3.utils.BN(feeBalance);
-                const feeMintedBN = new web3.utils.BN(feeMinted);
-                burnButton.disabled = feeBalanceBN.lt(feeMintedBN) || feeMintedBN.isZero();
-                await updateEstimatedFee();
-            } catch (error) {
-                showModal('Failed to update balances. Retrying...');
-                setTimeout(updateBalances, 2000);
-            }
+            const [feeBalance, feedBalance, userData] = await Promise.all([
+                contract.methods.balanceOf(accounts[0]).call(),
+                feedContract.methods.balanceOf(accounts[0]).call(),
+                contract.methods.getUserCollateralAndFee(accounts[0]).call()
+            ]);
+            const collateral = userData[0];
+            const feeMinted = userData[1];
+            document.getElementById('feeBalance').innerText = `${parseFloat(web3.utils.fromWei(feeBalance, 'ether')).toFixed(18)} FEE`;
+            document.getElementById('feeMinted').innerText = `${parseFloat(web3.utils.fromWei(feeMinted, 'ether')).toFixed(18)} FEE`;
+            document.getElementById('feedBalance').innerText = `${parseFloat(web3.utils.fromWei(feedBalance, 'ether')).toFixed(18)} FEED`;
+            document.getElementById('userCollateral').innerText = `${parseFloat(web3.utils.fromWei(collateral, 'ether')).toFixed(18)} FEED`;
+            const mintButton = document.getElementById('mintButton');
+            const burnButton = document.getElementById('burnButton');
+            const feedBalanceBN = new web3.utils.BN(feedBalance);
+            const feeBalanceBN = new web3.utils.BN(feeBalance);
+            const feeMintedBN = new web3.utils.BN(feeMinted);
+            mintButton.disabled = feedBalanceBN.lte(web3.utils.toBN(web3.utils.toWei('1', 'ether')));
+            burnButton.disabled = feeMintedBN.isZero() || feeBalanceBN.lt(feeMintedBN);
+            await updateEstimatedFee();
         }
 
         async function updateFeedPrice() {
             if (!web3 || !contract || !accounts || isOperationInProgress) return;
-            try {
-                const feedPrice = await contract.methods.getFeedPrice().call();
-                document.getElementById('feedPrice').innerText = `${parseFloat(web3.utils.fromWei(feedPrice, 'ether')).toFixed(18)} USDT`;
-            } catch (error) {
-                showModal('Failed to update feed price');
-            }
+            const feedPrice = await contract.methods.getFeedPrice().call();
+            document.getElementById('feedPrice').innerText = `${parseFloat(web3.utils.fromWei(feedPrice, 'ether')).toFixed(18)} USDT`;
         }
 
         async function updateEstimatedFee() {
             if (!web3 || !contract || !accounts || isOperationInProgress) return;
-            try {
-                const mintFeedInput = document.getElementById('mintFeedInput').value || '0';
-                const feedAmountWei = web3.utils.toWei(mintFeedInput, 'ether');
-                const feedPrice = await contract.methods.getFeedPrice().call();
-                const feeAmountWei = new web3.utils.BN(feedAmountWei).mul(new web3.utils.BN(feedPrice)).div(new web3.utils.BN('2').mul(new web3.utils.BN('10').pow(new web3.utils.BN(18))));
-                document.getElementById('estimatedFee').innerText = `${parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether')).toFixed(18)} FEE`;
-            } catch (error) {
-                showModal('Failed to update estimated fee');
-            }
+            const mintFeedInput = document.getElementById('mintFeedInput').value || '0';
+            const feedAmountWei = web3.utils.toWei(mintFeedInput, 'ether');
+            const feedPrice = await contract.methods.getFeedPrice().call();
+            const feeAmountWei = new web3.utils.BN(feedAmountWei).mul(new web3.utils.BN(feedPrice)).div(new web3.utils.BN('2').mul(new web3.utils.BN('10').pow(new web3.utils.BN(18))));
+            document.getElementById('estimatedFee').innerText = `${parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether')).toFixed(18)} FEE`;
         }
 
         async function setMintPercentage(percentage) {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first!'); return; }
-            try {
-                const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
-                let feedAmountWei;
-                if (percentage === 100) {
-                    const reserveAmount = web3.utils.toWei('1', 'ether');
-                    feedAmountWei = new web3.utils.BN(feedBalance).sub(new web3.utils.BN(reserveAmount));
-                    if (feedAmountWei.lt(new web3.utils.BN(0))) feedAmountWei = new web3.utils.BN(0);
-                } else {
-                    feedAmountWei = new web3.utils.BN(feedBalance).mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
-                }
-                document.getElementById('mintFeedInput').value = parseFloat(web3.utils.fromWei(feedAmountWei.toString(), 'ether')).toFixed(18);
-                await updateEstimatedFee();
-            } catch (error) {
-                showModal('Error setting mint percentage');
+            const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+            let feedAmountWei;
+            if (percentage === 100) {
+                feedAmountWei = new web3.utils.BN(feedBalance).sub(new web3.utils.BN(web3.utils.toWei('1', 'ether')));
+                if (feedAmountWei.lt(new web3.utils.BN(0))) feedAmountWei = new web3.utils.BN(0);
+            } else {
+                feedAmountWei = new web3.utils.BN(feedBalance).mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
             }
+            document.getElementById('mintFeedInput').value = parseFloat(web3.utils.fromWei(feedAmountWei.toString(), 'ether')).toFixed(18);
+            await updateEstimatedFee();
         }
 
         async function setBurnPercentage(percentage) {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first!'); return; }
-            try {
-                const userData = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
-                if (!Array.isArray(userData) || userData.length !== 2) throw new Error('Invalid user data');
-                const [, feeMinted] = userData;
-                const feeMintedBN = new web3.utils.BN(feeMinted);
-                if (feeMintedBN.isZero()) {
-                    document.getElementById('burnFeeInput').value = '0';
-                    return;
-                }
-                let feeAmountWei;
-                if (percentage === 100) {
-                    const reserveAmount = web3.utils.toWei('0.000000000000001', 'ether');
-                    feeAmountWei = feeMintedBN.sub(new web3.utils.BN(reserveAmount));
-                    if (feeAmountWei.lt(new web3.utils.BN(0))) feeAmountWei = new web3.utils.BN(0);
-                } else {
-                    feeAmountWei = feeMintedBN.mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
-                }
-                document.getElementById('burnFeeInput').value = parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether')).toFixed(18);
-            } catch (error) {
-                showModal(`Error setting burn percentage: ${error.message}`);
+            const userData = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+            const feeMinted = userData[1];
+            const feeMintedBN = new web3.utils.BN(feeMinted);
+            if (feeMintedBN.isZero()) {
+                document.getElementById('burnFeeInput').value = '0';
+                return;
             }
+            let feeAmountWei;
+            if (percentage === 100) {
+                feeAmountWei = feeMintedBN.sub(new web3.utils.BN(web3.utils.toWei('0.000000000000001', 'ether')));
+                if (feeAmountWei.lt(new web3.utils.BN(0))) feeAmountWei = new web3.utils.BN(0);
+            } else {
+                feeAmountWei = feeMintedBN.mul(new web3.utils.BN(percentage)).div(new web3.utils.BN(100));
+            }
+            document.getElementById('burnFeeInput').value = parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether')).toFixed(18);
         }
 
         async function checkAndApproveFeed() {
             if (!web3 || !contract || !accounts || !feedContract) return false;
-            try {
-                const maxAmount = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+            const allowance = await feedContract.methods.allowance(accounts[0], CONTRACT_ADDRESS).call();
+            const feedAmount = document.getElementById('mintFeedInput').value;
+            const feedWei = web3.utils.toWei(feedAmount, 'ether');
+            if (new web3.utils.BN(allowance).lt(new web3.utils.BN(feedWei))) {
                 showModal('Authorizing FEED...');
-                await feedContract.methods.approve(contractAddress, maxAmount).send({ from: accounts[0], gas: 100000 });
+                await feedContract.methods.approve(CONTRACT_ADDRESS, web3.utils.toWei('1000000', 'ether')).send({ from: accounts[0], gas: 100000 });
                 showModal('Authorization successful!');
-                return true;
-            } catch (error) {
-                showModal(`Authorization failed: ${error.message}`);
-                return false;
             }
+            return true;
         }
 
         async function mintFee() {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first!'); return; }
             const feedAmount = document.getElementById('mintFeedInput').value;
             if (!feedAmount || feedAmount <= 0) { showModal('Please enter a valid FEED amount!'); return; }
+            isOperationInProgress = true;
+            const mintButton = document.getElementById('mintButton');
+            mintButton.classList.add('loading');
             try {
-                isOperationInProgress = true;
-                const mintButton = document.getElementById('mintButton');
-                mintButton.classList.add('loading');
                 const feedWei = web3.utils.toWei(feedAmount, 'ether');
-                const isApproved = await checkAndApproveFeed();
-                if (!isApproved) throw new Error('Authorization failed');
+                const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+                if (new web3.utils.BN(feedWei).gt(new web3.utils.BN(feedBalance))) throw new Error('Insufficient FEED balance');
+                if (new web3.utils.BN(feedBalance).sub(new web3.utils.BN(feedWei)).lt(web3.utils.toBN(web3.utils.toWei('1', 'ether')))) throw new Error('Must reserve 1 FEED');
+                if (!await checkAndApproveFeed()) throw new Error('Authorization failed');
                 showModal(`Minting with ${feedAmount} FEED...`);
                 await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
                 showModal('Mint successful!');
@@ -299,18 +277,23 @@
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first!'); return; }
             const feeAmount = document.getElementById('burnFeeInput').value;
             if (!feeAmount || feeAmount <= 0) { showModal('Please enter a valid FEE amount!'); return; }
+            isOperationInProgress = true;
+            const burnButton = document.getElementById('burnButton');
+            burnButton.classList.add('loading');
             try {
-                isOperationInProgress = true;
-                const burnButton = document.getElementById('burnButton');
-                burnButton.classList.add('loading');
-                const userData = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
-                if (!Array.isArray(userData) || userData.length !== 2) throw new Error('Invalid user data');
-                const [, feeMinted] = userData;
                 const feeWei = web3.utils.toWei(feeAmount, 'ether');
-                if (new web3.utils.BN(feeWei).gt(new web3.utils.BN(feeMinted))) {
-                    showModal('Cannot burn more FEE than minted!');
-                    return;
-                }
+                const [feeBalance, userData] = await Promise.all([
+                    contract.methods.balanceOf(accounts[0]).call(),
+                    contract.methods.getUserCollateralAndFee(accounts[0]).call()
+                ]);
+                const feeMinted = userData[1];
+                const feeBalanceBN = new web3.utils.BN(feeBalance);
+                const feeMintedBN = new web3.utils.BN(feeMinted);
+                const feeWeiBN = new web3.utils.BN(feeWei);
+                if (feeWeiBN.gt(feeMintedBN)) throw new Error('Cannot burn more FEE than minted');
+                if (feeWeiBN.lt(web3.utils.toBN(web3.utils.toWei('0.000000000000001', 'ether')))) throw new Error('Amount must be at least 0.000000000000001 FEE');
+                if (feeBalanceBN.lt(feeWeiBN)) throw new Error('Insufficient FEE balance');
+                if (feeMintedBN.sub(feeWeiBN).lt(web3.utils.toBN(web3.utils.toWei('0.000000000000001', 'ether')))) throw new Error('Must reserve 0.000000000000001 FEE');
                 showModal(`Burning ${feeAmount} FEE...`);
                 await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
                 showModal('Burn successful!');
