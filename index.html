@@ -234,7 +234,9 @@
         async function setBurnPercentage(percentage) {
             if (!web3 || !contract || !accounts) { showModal('Please connect your wallet first!'); return; }
             try {
-                const [, feeMinted] = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+                const userData = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+                if (!Array.isArray(userData) || userData.length !== 2) throw new Error('Invalid user data');
+                const [, feeMinted] = userData;
                 const feeMintedBN = new web3.utils.BN(feeMinted);
                 if (feeMintedBN.isZero()) {
                     document.getElementById('burnFeeInput').value = '0';
@@ -250,7 +252,7 @@
                 }
                 document.getElementById('burnFeeInput').value = parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether')).toFixed(18);
             } catch (error) {
-                showModal('Error setting burn percentage');
+                showModal(`Error setting burn percentage: ${error.message}`);
             }
         }
 
@@ -301,7 +303,9 @@
                 isOperationInProgress = true;
                 const burnButton = document.getElementById('burnButton');
                 burnButton.classList.add('loading');
-                const [, feeMinted] = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+                const userData = await contract.methods.getUserCollateralAndFee(accounts[0]).call();
+                if (!Array.isArray(userData) || userData.length !== 2) throw new Error('Invalid user data');
+                const [, feeMinted] = userData;
                 const feeWei = web3.utils.toWei(feeAmount, 'ether');
                 if (new web3.utils.BN(feeWei).gt(new web3.utils.BN(feeMinted))) {
                     showModal('Cannot burn more FEE than minted!');
