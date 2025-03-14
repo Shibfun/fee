@@ -70,7 +70,7 @@
                 <button id="mintButton">Mint</button>
             </div>
             <div class="input-group">
-                <input type="number" id="mintFeedInput" placeholder="FEED Amount" step="any" min="0">
+                <input type="number" id="mintFeedInput" placeholder="FEED Amount" step="any" min="0" oninput="updateEstimatedFee()">
             </div>
             <div class="percentage-buttons">
                 <button class="percentage-btn" onclick="setMintPercentage(25)">25%</button>
@@ -197,7 +197,11 @@
             const feedAmountWei = web3.utils.toWei(mintFeedInput, 'ether');
             const feedPrice = await contract.methods.getFeedPrice().call();
             const feeAmountWei = new web3.utils.BN(feedAmountWei).mul(new web3.utils.BN(feedPrice)).div(new web3.utils.BN('2').mul(new web3.utils.BN('10').pow(new web3.utils.BN(18))));
-            document.getElementById('estimatedFee').innerText = `${parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether')).toFixed(18)} FEE`;
+            const feeAmount = parseFloat(web3.utils.fromWei(feeAmountWei.toString(), 'ether'));
+            document.getElementById('estimatedFee').innerText = `${feeAmount.toFixed(18)} FEE`;
+            const mintButton = document.getElementById('mintButton');
+            const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+            mintButton.disabled = feeAmount <= 1 || new web3.utils.BN(feedAmountWei).gt(new web3.utils.BN(feedBalance));
         }
 
         async function setMintPercentage(percentage) {
@@ -235,12 +239,12 @@
 
         async function checkAndApproveFeed() {
             if (!web3 || !contract || !accounts || !feedContract) return false;
-            const allowance = await feedContract.methods.allowance(accounts[0], CONTRACT_ADDRESS).call();
             const feedAmount = document.getElementById('mintFeedInput').value;
             const feedWei = web3.utils.toWei(feedAmount, 'ether');
+            const allowance = await feedContract.methods.allowance(accounts[0], CONTRACT_ADDRESS).call();
             if (new web3.utils.BN(allowance).lt(new web3.utils.BN(feedWei))) {
                 showModal('Authorizing FEED...');
-                await feedContract.methods.approve(CONTRACT_ADDRESS, web3.utils.toWei('1000000', 'ether')).send({ from: accounts[0], gas: 100000 });
+                await feedContract.methods.approve(CONTRACT_ADDRESS, feedWei).send({ from: accounts[0], gas: 100000 });
                 showModal('Authorization successful!');
             }
             return true;
@@ -256,8 +260,10 @@
             try {
                 const feedWei = web3.utils.toWei(feedAmount, 'ether');
                 const feedBalance = await feedContract.methods.balanceOf(accounts[0]).call();
+                const feedPrice = await contract.methods.getFeedPrice().call();
+                const feeAmountWei = new web3.utils.BN(feedWei).mul(new web3.utils.BN(feedPrice)).div(new web3.utils.BN('2').mul(new web3.utils.BN('10').pow(new web3.utils.BN(18))));
                 if (new web3.utils.BN(feedWei).gt(new web3.utils.BN(feedBalance))) throw new Error('Insufficient FEED balance');
-                if (new web3.utils.BN(feedBalance).sub(new web3.utils.BN(feedWei)).lt(web3.utils.toBN(web3.utils.toWei('1', 'ether')))) throw new Error('Must reserve 1 FEED');
+                if (feeAmountWei.lte(web3.utils.toBN(web3.utils.toWei('1', 'ether')))) throw new Error('Estimated FEE must be greater than 1');
                 if (!await checkAndApproveFeed()) throw new Error('Authorization failed');
                 showModal(`Minting with ${feedAmount} FEED...`);
                 await contract.methods.mint(feedWei).send({ from: accounts[0], gas: 300000 });
@@ -293,7 +299,6 @@
                 if (feeWeiBN.gt(feeMintedBN)) throw new Error('Cannot burn more FEE than minted');
                 if (feeWeiBN.lt(web3.utils.toBN(web3.utils.toWei('0.000000000000001', 'ether')))) throw new Error('Amount must be at least 0.000000000000001 FEE');
                 if (feeBalanceBN.lt(feeWeiBN)) throw new Error('Insufficient FEE balance');
-                if (feeMintedBN.sub(feeWeiBN).lt(web3.utils.toBN(web3.utils.toWei('0.000000000000001', 'ether')))) throw new Error('Must reserve 0.000000000000001 FEE');
                 showModal(`Burning ${feeAmount} FEE...`);
                 await contract.methods.burn(feeWei).send({ from: accounts[0], gas: 200000 });
                 showModal('Burn successful!');
